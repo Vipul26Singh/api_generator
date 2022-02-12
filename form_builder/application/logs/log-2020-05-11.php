@@ -1,0 +1,8 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
+
+ERROR - 2020-05-11 09:42:59 --> Severity: Notice  --> Only variable references should be returned by reference /var/www/html/onlineaki/form_builder/system/core/Common.php 257
+ERROR - 2020-05-11 09:42:59 --> Severity: Warning  --> Declaration of MX_Lang::load($langfile, $lang = '', $return = false, $add_suffix = true, $alt_path = '', $_module = '') should be compatible with CI_Lang::load($langfile = '', $idiom = '', $return = false, $add_suffix = true, $alt_path = '') /var/www/html/onlineaki/form_builder/application/third_party/MX/Lang.php 70
+ERROR - 2020-05-11 09:42:59 --> Severity: Warning  --> Declaration of MX_Loader::helper($helper) should be compatible with CI_Loader::helper($helpers = Array) /var/www/html/onlineaki/form_builder/application/third_party/MX/Loader.php 409
+ERROR - 2020-05-11 09:42:59 --> Severity: Warning  --> Declaration of MX_Loader::helpers($helpers) should be compatible with CI_Loader::helpers($helpers = Array) /var/www/html/onlineaki/form_builder/application/third_party/MX/Loader.php 409
+ERROR - 2020-05-11 09:42:59 --> Severity: Warning  --> Declaration of MX_Loader::language($langfile, $idiom = '', $return = false, $add_suffix = true, $alt_path = '') should be compatible with CI_Loader::language($file = Array, $lang = '') /var/www/html/onlineaki/form_builder/application/third_party/MX/Loader.php 409
+ERROR - 2020-05-11 09:42:59 --> Severity: Warning  --> Declaration of MX_Loader::_ci_get_component($component) should be compatible with & CI_Loader::_ci_get_component($component) /var/www/html/onlineaki/form_builder/application/third_party/MX/Loader.php 409

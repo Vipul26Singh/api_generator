@@ -1,0 +1,11 @@
+[10-May-2020 03:17:41 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_pconnect() in /var/www/html/onlineaki/form_builder/system/database/drivers/mysql/mysql_driver.php:91
+Stack trace:
+#0 /var/www/html/onlineaki/form_builder/system/database/DB_driver.php(115): CI_DB_mysql_driver->db_pconnect()
+#1 /var/www/html/onlineaki/form_builder/system/database/DB.php(148): CI_DB_driver->initialize()
+#2 /var/www/html/onlineaki/form_builder/application/third_party/MX/Loader.php(98): DB(Array, NULL)
+#3 /var/www/html/onlineaki/form_builder/system/core/Loader.php(1193): MX_Loader->database()
+#4 /var/www/html/onlineaki/form_builder/system/core/Loader.php(152): CI_Loader->_ci_autoloader()
+#5 /var/www/html/onlineaki/form_builder/application/third_party/MX/Loader.php(59): CI_Loader->initialize()
+#6 /var/www/html/onlineaki/form_builder/system/core/Controller.php(51): MX_Loader->initialize()
+#7 /var/www/html/onlineaki/form_builder/application/third_party/MX/Base.php(55): CI_Controller->__construct()
+#8 /var/www/html/onlineaki/form_builder/application/th in /var/www/html/onlineaki/form_builder/system/database/drivers/mysql/mysql_driver.php on line 91

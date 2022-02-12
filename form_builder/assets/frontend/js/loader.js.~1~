@@ -1,0 +1,173 @@
+uifm_load_cssfiles();
+var $uifm;
+var rockfm_vars;
+require.config({
+    baseUrl: UIFORM_SRC,
+    paths: {
+        jquery: 'assets/common/js/jquery/1.11.3/jquery.min',
+        jquery_ui: 'assets/common/js/jqueryui/1.11.4/jquery-ui.min',
+        bootstrap: 'assets/common/js/bootstrap/3.2.0/bootstrap.min',
+        b_slider: 'assets/backend/js/bslider/4.10.4/bootstrap-slider',
+        b_jasny: 'assets/common/js/bjasny/jasny-bootstrap',
+        b_touchspin: 'assets/backend/js/btouchspin/jquery.bootstrap-touchspin',
+        moment: 'assets/backend/js/bdatetime/moment-with-locales',
+        b_dtpicker2: 'assets/backend/js/bdatetime/bootstrap-datetimepicker',
+        b_star: 'assets/backend/js/bratestar/3.5.7/js/star-rating',
+        b_cpicker: 'assets/backend/js/colorpicker/bootstrap-colorpicker.min',
+        b_switch: 'assets/backend/js/bswitch/bootstrap-switch',
+        j_form: 'assets/frontend/js/jquery.form',
+        script1: 'assets/frontend/js/script',
+        'blueimp-gallery-jquery': 'assets/common/js/blueimp/2.16.0/js/jquery.blueimp-gallery',
+        'bootstrap-image-gallery': 'assets/common/js/bgallery/3.1.3/js/bootstrap-image-gallery'
+    },
+   waitSeconds: 0,
+   map: {
+        '*': {
+            'blueimp-gallery': 'assets/common/js/blueimp/2.16.0/js/blueimp-gallery'
+        }
+    },
+    shim: {
+        'jquery': {exports: "$"},
+        'jquery_ui': {
+            deps: ['jquery'] },
+        'bootstrap': {
+            deps: ['jquery'] },
+        'b_jasny': {
+            deps: ['jquery','bootstrap'] },
+        'b_slider': {
+            deps: ['jquery'], 
+            exports: '$.fn.slider'},
+        'moment': {
+            deps: ['jquery']},
+        'b_touchspin': {
+            deps: ['jquery'] } ,
+        'b_switch': {
+            deps: ['jquery']},
+        'b_dtpicker2': {
+            deps: ['jquery','moment'], 
+            exports: "$.fn.datepicker"},
+        'b_star': {
+            deps: ['jquery']},
+        'b_cpicker': {
+            deps: ['jquery']},
+        'j_form': {
+            deps: ['jquery']},
+        "blueimp-gallery": {
+            "exports": "blueimpgal"
+        }
+        
+    }
+});
+
+require(["jquery",'b_slider','script1','b_touchspin','b_switch','bootstrap','b_dtpicker2','b_star','b_cpicker','j_form','blueimp-gallery','blueimp-gallery-jquery','b_jasny'], 
+function($,slider,script,TouchSpin,BootstrapSwitch,_bootstrap,datetimepicker,rating,colorpicker,ajaxSubmit,blueimpgal) {
+    
+    window.blueimpgal=blueimpgal;
+     $uifm = $;
+     rockfm_vars={"ajaxurl":"",
+        "uifm_baseurl": UIFORM_SRC,
+        "uifm_siteurl":UIFORM_WWW,
+        "uifm_sfm_baseurl":UIFORM_SRC+"libs/styles-font-menu/styles-fonts/png/",
+        "imagesurl":UIFORM_SRC+"assets/frontend/images"};
+        
+    script(UIFORM_SRC+'assets/frontend/js/js.js', 'uifm_js');
+    script.ready('uifm_js', function() {
+    var  uifm_jq14 = $.noConflict(true); 
+    (function ($) {
+        rocketfm();
+        rocketfm.initialize();
+        rocketfm.setExternalVars(_uifmvar);
+        $.each(_uifmvar.fm_ids, function( index, value ) {
+            $('#uifm_container_'+value[0]).append('<img src="'+UIFORM_SRC+'assets/frontend/images/loader-form.gif"/></div>');
+            
+            rocketfm.run_form(value[0]);
+        });
+     }(uifm_jq14));                
+     });
+
+});
+
+function uifm_load_cssfiles(){
+ 
+    var uifm_loadcssfile = function(cssFilesArr){
+               for(var i in cssFilesArr) { 
+                    if (!document.getElementById(cssFilesArr[i].id))
+                    {
+                        var fileref=document.createElement("link");
+                    fileref.setAttribute("rel", "stylesheet");
+                    fileref.setAttribute("type", "text/css");
+                    fileref.setAttribute("id", cssFilesArr[i].id);
+                    fileref.setAttribute("media", "all");
+                    fileref.setAttribute("href", cssFilesArr[i].href);
+                    document.getElementsByTagName("head")[0].appendChild(fileref);
+                    }
+                }
+                
+        }
+
+           //load css
+        var uifm_cssFiles = [{id:"uifm_css_font_a",
+                              href:UIFORM_SRC+'assets/common/css/font-awesome.min.css'}
+                          , {id:"uifm_css_b_jasny",
+                              href:UIFORM_SRC+'assets/common/js/bjasny/jasny-bootstrap.css'}
+                          , {id:"uifm_css_b_slider",
+                              href:UIFORM_SRC+'assets/backend/js/bslider/4.10.4/bootstrap-slider.min.css'}
+                          , {id:"uifm_css_b_touchspin",
+                              href:UIFORM_SRC+'assets/backend/js/btouchspin/jquery.bootstrap-touchspin.css'}
+                          , {id:"uifm_css_b_date",
+                              href:UIFORM_SRC+'assets/backend/js/bdatetime/bootstrap-datetimepicker.css'}
+                          , {id:"uifm_css_b_cpicker",
+                              href:UIFORM_SRC+'assets/backend/js/colorpicker/bootstrap-colorpicker.css'}
+                          , {id:"uifm_css_star_rating",
+                              href:UIFORM_SRC+'assets/backend/js/bratestar/3.5.7/css/star-rating.css'}
+                          , {id:"uifm_css_b_switch",
+                              href:UIFORM_SRC+'assets/backend/js/bswitch/bootstrap-switch.css'}
+                          , {id:"uifm_css_blueimp",
+                              href:UIFORM_SRC+'assets/common/js/blueimp/2.16.0/css/blueimp-gallery.min.css'}
+                          , {id:"uifm_css_b_imgal",
+                              href:UIFORM_SRC+'assets/common/js/bgallery/3.1.3/css/bootstrap-image-gallery.css'}
+                          , {id:"uifm_css_global",
+                              href:UIFORM_SRC+'assets/frontend/css/css.css'}
+                            ];
+               
+            var uifm_preload_noconflic = _uifmvar.fm_preload_noconflict || "1";
+        
+            if(parseInt(uifm_preload_noconflic)===1){
+                uifm_cssFiles.unshift({
+                                id: 'uifm_css_bootstrap',
+                                href: UIFORM_SRC+'assets/common/js/bootstrap/custom/bootstrap-widget.css'
+                                 });
+                uifm_cssFiles.unshift({
+                                id: 'uifm_css_b_theme',
+                                href: UIFORM_SRC+'assets/common/js/bootstrap/custom/bootstrap-theme-widget.css'
+                                 });                 
+                                  
+            }else{
+                uifm_cssFiles.unshift({
+                                id: 'uifm_css_bootstrap',
+                                href: UIFORM_SRC+'assets/common/js/bootstrap/custom/bootstrap.css'
+                                 });
+                uifm_cssFiles.unshift({
+                                id: 'uifm_css_b_theme',
+                                href: UIFORM_SRC+'assets/common/js/bootstrap/custom/bootstrap-theme.css'
+                                 });
+            } 
+             //load css of form      
+              var tmp_element = {};
+              var tmp_fmid;
+              
+              for(var i in _uifmvar.fm_ids) {
+                tmp_fmid =_uifmvar.fm_ids[i][0]||null;
+                if(parseInt(tmp_fmid)>0){
+                    tmp_element = {
+                                id: 'uifm_css_'+_uifmvar.fm_ids[i][0],
+                                href: UIFORM_SRC+'assets/frontend/css/rockfm_form'+_uifmvar.fm_ids[i][0]+'.css'
+                                 };
+                   uifm_cssFiles.push(tmp_element);
+                }
+                  
+              }
+              
+              uifm_loadcssfile(uifm_cssFiles);
+              
+}
