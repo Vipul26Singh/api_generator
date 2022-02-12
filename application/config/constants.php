@@ -97,4 +97,6 @@ defined('BASE_ASSET') 			OR define('BASE_ASSET'			, BASE_URL . 'asset/');
 defined('BASE_ASSET')           OR define('BASE_ASSET', base_url('asset/')); // highest automatically-assigned error code
 defined('VERSION')      		OR define('VERSION', '2.6.8'); // highest automatically-assigned error code
 
+defined('SUPER_ADMIN_USER_ID')                      OR define('SUPER_ADMIN_USER_ID', '1');
+
 
