@@ -72,7 +72,7 @@ jQuery(document).ready(domo);
                         <div class="box-footer no-padding">
 			  <ul class="nav nav-stacked">
                           <?php foreach($this->aauth->get_user_groups($user->id) as $row): ?>
-			    <li><a href="<?= !empty($user->fk_client_id) ? "/administrator/client_master/view/{$user->fk_client_id}" : '#' ?>"><i class="fa fa-chevron-right"></i> <?= $row->name; ?></a></li>
+			    <li><a href="'#'"><i class="fa fa-chevron-right"></i> <?= $row->name; ?></a></li>
                            <?php endforeach; ?>
                           </ul>
                         </div>

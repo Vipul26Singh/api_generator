@@ -1,8 +1,5 @@
 <!-- Fine Uploader Gallery CSS file
 ====================================================================== -->
-<?php
-$clients = $this->db->query("select * from client_master where client_id not in (select fk_client_id from aauth_users where fk_client_id is not null)")->result();
-?>
 
 <link href="<?= BASE_ASSET; ?>/fine-upload/fine-uploader-gallery.min.css" rel="stylesheet">
 <!-- Fine Uploader jQuery JS file
@@ -78,20 +75,6 @@ jQuery(document).ready(domo);
                     'method'  => 'POST'
 	    ]); ?>
 
-			<div class="form-group ">
-                            <label for="fk_client_address_country_id" class="col-sm-2 control-label">Client
-                            </label>
-                            <div class="col-sm-8">
-                                <select  class="form-control chosen chosen-select-deselect" name="client_id" id="client_id" data-placeholder="Select client" >
-                                    <option value=""></option>
-                                    <?php foreach ($clients as $row): ?>
-                                    <option value="<?= $row->client_id ?>"><?= $row->client_company_name; ?></option>
-                                    <?php endforeach; ?>  
-                                </select>
-                                <small class="info help-block">
-                                Select client if creating user for client</small>
-                            </div>
-                        </div>
 
                     <div class="form-group ">
                         <label for="username" class="col-sm-2 control-label"><?= cclang('username') ?> <i class="required">*</i></label>
@@ -192,32 +175,6 @@ jQuery(document).ready(domo);
 <!-- Page script -->
 <script>
 $(document).ready(function() {
-	$("#client_id").change(function() {
-		let client_id = $(this).val();
-
-		if(client_id) {
-			let url = "<?= base_url('administrator/Ajax_controller/client_detail/') ?>" + client_id;
-
-			$.ajax({
-			url: url,
-				type: 'GET',
-				dataType: 'json',
-			})
-				.done(function(res) {
-					$.each(res, function( index, value ) {
-						let full_name = value.client_company_name;
-						$("#full_name").val(full_name);
-						$("#full_name").attr("readonly", "readonly");
-						$("#group_div").hide();
-					});
-
-				});
-		} else {
-			$("#full_name").removeAttr("readonly", "readonly");
-			$("#group_div").show();
-		}
-
-	});
 
     $('#btn_cancel').click(function() {
         swal({

@@ -89,9 +89,6 @@ class User extends Admin
 				'date_created'	=> date('Y-m-d H:i:s')
 			];
 
-			if(!empty($this->input->post('client_id'))) {
-				$save_data['fk_client_id'] = $this->input->post('client_id');
-			}
 
 			if (!empty($user_avatar_name)) {
 
@@ -111,16 +108,11 @@ class User extends Admin
 
 			if ($save_user) {
 				//add user to group
-				if(empty($this->input->post('client_id'))) {
-					if (count($this->input->post('group'))) {
-						$user_id = $save_user;
-						foreach ($this->input->post('group') as $group_id) {
-							$this->aauth->add_member($user_id, $group_id);				
-						}
+				if (count($this->input->post('group'))) {
+					$user_id = $save_user;
+					foreach ($this->input->post('group') as $group_id) {
+						$this->aauth->add_member($user_id, $group_id);				
 					}
-				} else {
-					$group_id = $this->aauth->get_group_id('Clients');
-					$this->aauth->add_member($save_user, $group_id);
 				}
 				if ($this->input->post('save_type') == 'stay') {
 					$this->response['success'] = true;
@@ -131,10 +123,10 @@ class User extends Admin
 				} else {
 					set_message(
 						cclang('success_save_data_redirect', [
-						anchor('administrator/user/edit/' . $save_user, 'Edit User')
-					]), 'success');
+							anchor('administrator/user/edit/' . $save_user, 'Edit User')
+						]), 'success');
 
-	        		$this->response['success'] = true;
+					$this->response['success'] = true;
 					$this->response['redirect'] = site_url('administrator/user');
 				}
 			} else {

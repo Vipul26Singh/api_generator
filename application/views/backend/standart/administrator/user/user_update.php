@@ -1,13 +1,6 @@
 <!-- Fine Uploader Gallery CSS file
    ====================================================================== -->
 
-<?php
-	$client_detail = '';
-	if(!empty($user->fk_client_id)) {
-		$client_detail = $this->db->query("select * from client_master where client_id = {$user->fk_client_id}")->row();
-	}
-
-?>
 <link href="<?= BASE_ASSET; ?>/fine-upload/fine-uploader-gallery.min.css" rel="stylesheet">
 <!-- Fine Uploader jQuery JS file
    ====================================================================== -->
@@ -100,17 +93,11 @@
                         <label for="full_name" class="col-sm-2 control-label"><?= cclang('full_name'); ?> <i class="required">*</i></label>
 
 			<div class="col-sm-8">
-			<?php if(empty($client_detail)) { ?>
 			  <input type="text" class="form-control" name="full_name" id="full_name" placeholder="Full Name" value="<?= set_value('full_name', $user->full_name); ?>">
-			<?php } else { ?>
-			<input type="text" class="form-control" name="full_name" id="full_name" placeholder="Full Name" value="<?= $client_detail->client_company_name?>" readonly>
-
-			<?php } ?>
                           <small class="info help-block">The full name of user.</small>
                         </div>
 		    </div>
 
-			<?php if(empty($client_detail)) { ?>
                     <div class="form-group ">
                         <label for="content" class="col-sm-2 control-label"><?= cclang('groups'); ?> <i class="required">*</i></label>
 
@@ -125,12 +112,6 @@
                           </small>
                         </div>
 		    </div>
-			<?php } else { 
-				foreach($group_user as $gu) {
-			?>
-				<input type="hidden" name="group[]" value="<?= $gu ?>" readonly>
-
-			<?php } } ?>
 
                     <div class="form-group ">
                         <label for="username" class="col-sm-2 control-label"><?= cclang('avatar'); ?> </label>

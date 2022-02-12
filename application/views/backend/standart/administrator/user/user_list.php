@@ -106,11 +106,7 @@ jQuery(document).ready(domo);
                                 <?= _ent($user->full_name); ?>
                               </div>
 			   </td>
-				<?php if(!empty($user->fk_client_id)) {  ?>
-			   <td><a href="/administrator/client_master/view/<?= $user->fk_client_id ?>"> <?= _ent($user->username); ?> </a></td>
-				<?php } else { ?>
 			<td><?= _ent($user->username); ?></td>
-				<?php } ?>
                            <td>	
                               
                            <input type="checkbox" name="status" data-user-id="<?= $user->id; ?>" class="switch-button" <?= $user->banned ?:'checked'; ?> >
