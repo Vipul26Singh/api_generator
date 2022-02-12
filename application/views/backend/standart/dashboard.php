@@ -46,41 +46,41 @@
             </div>
         </div>
         <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="info-box button" onclick="goUrl('administrator/crud')">
+            <div class="info-box button" onclick="goUrl('administrator/setting')">
                 <span class="info-box-icon bg-aqua">
                     <i class="ion ion-ios-gear">
                     </i>
                 </span>
                 <div class="info-box-content">
 		    <span class="info-box-text">
-				Crud Builder
+				Settings
                     </span>
                 </div>
             </div>
         </div>
 
          <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="info-box button" onclick="goUrl('administrator/crud')">
+            <div class="info-box button" onclick="goUrl('administrator/report_master')">
                 <span class="info-box-icon bg-aqua">
                     <i class="ion ion-man">
                     </i>
                 </span>
                 <div class="info-box-content">
 		    <span class="info-box-text">
-			Crud Builder
+			Reports
                     </span>
                 </div>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="info-box button" onclick="goUrl('administrator/rest')">
+            <div class="info-box button" onclick="goUrl('administrator/user')">
                 <span class="info-box-icon bg-yellow">
                     <i class="ion ion-man">
                     </i>
                 </span>
                 <div class="info-box-content">
 		    <span class="info-box-text">
-				API Builder
+				Users
                     </span>
                 </div>
             </div>
