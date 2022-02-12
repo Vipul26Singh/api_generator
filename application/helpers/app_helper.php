@@ -97,9 +97,35 @@ if(!function_exists('clean_snake_case')) {
 
 if(!function_exists('get_group_user')) {
 	function get_group_user($id_user = '') {
-		return get_user_groups($id_user);
+		$ci =& get_instance();
+
+		return $ci->aauth->get_user_groups($id_user);
 	}
 }
+
+if(!function_exists('get_user_max_group')) {
+	function get_user_max_group($id_user = '') {
+		$user_all_groups = get_group_user($id_user);
+		$priority = -1;
+		$ind = 0;
+		$max_index = 0;
+		foreach($user_all_groups as $group) {
+			if($group->priority < $priority || $priority == -1) {
+				$priority = $group->priority;	
+				$max_index = $ind;
+			}	
+
+			$ind = $ind + 1;
+		}
+
+		if(empty($user_all_groups)) {
+			return new stdClass();
+		} else {
+			return $user_all_groups[$max_index];
+		}
+	}
+}
+
 
 if(!function_exists('get_user_data')) {
 	function get_user_data($field_name = '') {

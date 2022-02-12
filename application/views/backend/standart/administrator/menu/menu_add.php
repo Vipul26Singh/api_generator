@@ -29,6 +29,18 @@ function domo(){
 jQuery(document).ready(domo);
 </script>
 
+<?php
+$user_group = get_user_max_group();
+$user_group_priority = -1;
+
+if( !empty($user_group) ) {
+        $user_group_priority = $user_group->priority;
+
+}
+
+?>
+
+
 <!-- Content Header (Page header) -->
 <section class="content-header">
    <h1>
@@ -160,7 +172,7 @@ jQuery(document).ready(domo);
                         <div class="col-sm-8">
                            <select  class="form-control chosen chosen-select" name="group[]" id="group" tabi-ndex="5" data-placeholder="Select Groups" multiple="">
                             <option value=""></option>
-                            <?php foreach (db_get_all_data('aauth_groups') as $row): ?>
+                            <?php foreach (db_get_all_data('aauth_groups', "priority >= {$user_group_priority}") as $row): ?>
                             <option value="<?= $row->id; ?>"><?= $row->name; ?></option>
                             <?php endforeach; ?>  
                            </select>

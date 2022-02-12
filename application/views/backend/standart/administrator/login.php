@@ -58,7 +58,7 @@
         'method'  => 'POST'
       ]); ?>
       <div class="form-group has-feedback <?= form_error('username') ? 'has-error' :''; ?>">
-        <input type="email" class="form-control" placeholder="Email" name="username" value="<?= set_value('username', 'admin@vipulsingh.xyz'); ?>">
+        <input type="email" class="form-control" placeholder="Email" name="username" value="<?= set_value('username', ''); ?>">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback <?= form_error('password') ? 'has-error' :''; ?>">

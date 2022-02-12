@@ -41,6 +41,18 @@
       <li class="active"> <?= cclang('update_button') ?></li>
    </ol>
 </section>
+<?php
+$user_group = get_user_max_group();
+$user_group_priority = -1;
+
+if( !empty($user_group) ) {
+        $user_group_priority = $user_group->priority;
+
+}
+
+?>
+
+
 <!-- Main content -->
 <section class="content">
    <div class="row" >
@@ -153,7 +165,7 @@
                         <div class="col-sm-8">
                            <select  class="form-control chosen chosen-select" name="group[]" id="group" tabi-ndex="5" data-placeholder="Select Groups" multiple="">
                             <option value=""></option>
-                            <?php foreach (db_get_all_data('aauth_groups') as $row): ?>
+                            <?php foreach (db_get_all_data('aauth_groups', "priority >= {$user_group_priority}") as $row): ?>
                             <option <?= array_search($row->id, $group_menu) !== false? 'selected="selected"' : ''; ?> value="<?= $row->id; ?>"  ><?= ucwords($row->name); ?></option>
                             <?php endforeach; ?>  
                             </select>

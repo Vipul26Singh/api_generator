@@ -11,37 +11,46 @@ class Model_aauth_groups extends MY_Model {
 	{
 		$config = array(
 			'primary_key' 	=> $this->primary_key,
-		 	'table_name' 	=> $this->table_name,
-		 	'field_search' 	=> $this->field_search,
-		 );
+			'table_name' 	=> $this->table_name,
+			'field_search' 	=> $this->field_search,
+		);
 
 		parent::__construct($config);
 	}
 
 	public function count_all($q = null, $field = null)
 	{
+		$user_group = get_user_max_group();
+		$priority = -1;
+
+		if( !empty($user_group) ) {
+			$priority = $user_group->priority;
+		}
+
 		$iterasi = 1;
-        $num = count($this->field_search);
-        $where = NULL;
-        $q = $this->scurity($q);
+		$num = count($this->field_search);
+		$where = NULL;
+		$q = $this->scurity($q);
 		$field = $this->scurity($field);
 
-        if (empty($field)) {
-	        foreach ($this->field_search as $field) {
-	            if ($iterasi == 1) {
-	                $where .= $field . " LIKE '%" . $q . "%' ";
-	            } else {
-	                $where .= "OR " . $field . " LIKE '%" . $q . "%' ";
-	            }
-	            $iterasi++;
-	        }
+		if (empty($field)) {
+			foreach ($this->field_search as $field) {
+				if ($iterasi == 1) {
+					$where .= $field . " LIKE '%" . $q . "%' ";
+				} else {
+					$where .= "OR " . $field . " LIKE '%" . $q . "%' ";
+				}
+				$iterasi++;
+			}
 
-	        $where = '('.$where.')';
-        } else {
-        	$where .= "(" . $field . " LIKE '%" . $q . "%' )";
-        }
+			$where = '('.$where.')';
+		} else {
+			$where .= "(" . $field . " LIKE '%" . $q . "%' )";
+		}
 
-        $this->db->where($where);
+		$where .= " and ( priority >= " . $priority . ")";
+
+		$this->db->where($where);
 		$query = $this->db->get($this->table_name);
 
 		return $query->num_rows();
@@ -49,34 +58,44 @@ class Model_aauth_groups extends MY_Model {
 
 	public function get($q = null, $field = null, $limit = 0, $offset = 0, $select_field = [])
 	{
+		$user_group = get_user_max_group();
+                $priority = -1;
+
+                if( !empty($user_group) ) {
+                        $priority = $user_group->priority;
+                }
+
+
 		$iterasi = 1;
-        $num = count($this->field_search);
-        $where = NULL;
-        $q = $this->scurity($q);
+		$num = count($this->field_search);
+		$where = NULL;
+		$q = $this->scurity($q);
 		$field = $this->scurity($field);
 
-        if (empty($field)) {
-	        foreach ($this->field_search as $field) {
-	            if ($iterasi == 1) {
-	                $where .= $field . " LIKE '%" . $q . "%' ";
-	            } else {
-	                $where .= "OR " . $field . " LIKE '%" . $q . "%' ";
-	            }
-	            $iterasi++;
-	        }
+		if (empty($field)) {
+			foreach ($this->field_search as $field) {
+				if ($iterasi == 1) {
+					$where .= $field . " LIKE '%" . $q . "%' ";
+				} else {
+					$where .= "OR " . $field . " LIKE '%" . $q . "%' ";
+				}
+				$iterasi++;
+			}
 
-	        $where = '('.$where.')';
-        } else {
-        	$where .= "(" . $field . " LIKE '%" . $q . "%' )";
-        }
+			$where = '('.$where.')';
+		} else {
+			$where .= "(" . $field . " LIKE '%" . $q . "%' )";
+		}
 
-        if (is_array($select_field) AND count($select_field)) {
-        	$this->db->select($select_field);
-        }
+		$where .= " and ( priority >= " . $priority . ")";
 
-        $this->db->where($where);
-        $this->db->limit($limit, $offset);
-        $this->db->order_by($this->primary_key, "DESC");
+		if (is_array($select_field) AND count($select_field)) {
+			$this->db->select($select_field);
+		}
+
+		$this->db->where($where);
+		$this->db->limit($limit, $offset);
+		$this->db->order_by($this->primary_key, "DESC");
 		$query = $this->db->get($this->table_name);
 
 		return $query->result();

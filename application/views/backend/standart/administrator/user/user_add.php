@@ -1,6 +1,16 @@
+<?php
+$user_group = get_user_max_group();
+$user_group_priority = -1;
+
+if( !empty($user_group) ) {
+	$user_group_priority = $user_group->priority;
+
+}
+
+?>
+
 <!-- Fine Uploader Gallery CSS file
 ====================================================================== -->
-
 <link href="<?= BASE_ASSET; ?>/fine-upload/fine-uploader-gallery.min.css" rel="stylesheet">
 <!-- Fine Uploader jQuery JS file
 ====================================================================== -->
@@ -124,7 +134,7 @@ jQuery(document).ready(domo);
 
                         <div class="col-sm-8">
                            <select  class="form-control chosen chosen-select" name="group[]" id="group" tabi-ndex="5" multiple placeholder="Select groups">
-                            <?php foreach (db_get_all_data('aauth_groups') as $row): ?>
+                            <?php foreach (db_get_all_data('aauth_groups', "priority >= {$user_group_priority}") as $row): ?>
                             <option value="<?= $row->id; ?>"><?= ucwords($row->name); ?></option>
                             <?php endforeach; ?>  
                            </select>

@@ -54,15 +54,16 @@ DROP TABLE IF EXISTS `aauth_groups`;
 CREATE TABLE `aauth_groups` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL,
+  `priority` int(11) NOT NULL DEFAULT '1000',
   `definition` text,
   `created_by` int(11) DEFAULT NULL,
   `updated_by` int(11) DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `aauth_groups_created_by_index` (`created_by`),
   KEY `aauth_groups_updated_by_index` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +72,7 @@ CREATE TABLE `aauth_groups` (
 
 LOCK TABLES `aauth_groups` WRITE;
 /*!40000 ALTER TABLE `aauth_groups` DISABLE KEYS */;
-INSERT INTO `aauth_groups` VALUES (1,'Admin','Superadmin Group',NULL,NULL,NULL,'0000-00-00 00:00:00'),(2,'Public','Public Group',NULL,NULL,NULL,'0000-00-00 00:00:00'),(3,'Default','Default Access Group',NULL,NULL,NULL,'0000-00-00 00:00:00');
+INSERT INTO `aauth_groups` VALUES (1,'Admin',1,'Superadmin Group',NULL,NULL,NULL,'0000-00-00 00:00:00'),(2,'Public',1000,'Public Group',NULL,NULL,NULL,'0000-00-00 00:00:00'),(3,'Default',1000,'Default Access Group',NULL,NULL,NULL,'0000-00-00 00:00:00'),(22,'SuperUser',2,'Admin',1,NULL,NULL,'2022-02-12 12:51:32');
 /*!40000 ALTER TABLE `aauth_groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +95,7 @@ CREATE TABLE `aauth_login_attempts` (
   PRIMARY KEY (`id`),
   KEY `aauth_login_attempts_created_by_index` (`created_by`),
   KEY `aauth_login_attempts_updated_by_index` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=419 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=422 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -366,7 +367,7 @@ CREATE TABLE `aauth_users` (
 
 LOCK TABLES `aauth_users` WRITE;
 /*!40000 ALTER TABLE `aauth_users` DISABLE KEYS */;
-INSERT INTO `aauth_users` VALUES (1,'admin@vipulsingh.xyz',NULL,NULL,'5340083421f3c5d068d5ecee7527fc6976300ca6b315d4179a43767971666582','admin',NULL,'admin','20181009165927-profile_icon_male.jpg',0,'2022-02-11 16:06:36','2022-02-11 16:06:36','2018-08-25 11:56:32',NULL,'2021-05-23 00:00:00','f5KBYqCQ4HlxJVPe',NULL,NULL,'132.154.116.213',NULL,1,'2021-08-03 12:59:14','0000-00-00 00:00:00'),(2,'guard@guard.com',NULL,NULL,'32c91af22bb469fa4a8297f112bdd9425f096d78bfe6e9dbdc15708e6b487885','guard',NULL,'Guard Bhai','20181009170200-face_human_blank_user_avatar_mannequin_dummy-512.png',1,'2018-09-08 14:47:16','2018-09-08 14:47:16','2018-09-05 16:36:32',NULL,NULL,NULL,NULL,NULL,'103.91.103.50',NULL,NULL,NULL,'0000-00-00 00:00:00'),(9,'manage@bitibe.com',NULL,NULL,'5340083421f3c5d068d5ecee7527fc6976300ca6b315d4179a43767971666582','System',NULL,'Management','20181010112655-m-logo.png',0,'2018-09-26 11:00:55','2018-09-26 11:00:55','2018-08-25 11:56:32',NULL,NULL,NULL,NULL,NULL,'192.168.0.106',NULL,NULL,NULL,'0000-00-00 00:00:00'),(13,'reject@akinternational.net',NULL,NULL,'2108991a70aae0a6c78220bdb0687073c60bb1def7aa8431f5c3209ba25ccf86','Rejected',NULL,'Reject Material','20181015131315-giant-quality-control-wall-sign-rejected-4231d-lg.jpg',0,'2018-10-15 16:56:56','2018-10-15 16:56:56','2018-10-15 13:13:15',NULL,NULL,NULL,NULL,NULL,'192.168.0.101',NULL,NULL,NULL,'0000-00-00 00:00:00');
+INSERT INTO `aauth_users` VALUES (1,'admin@vipulsingh.xyz',NULL,NULL,'5340083421f3c5d068d5ecee7527fc6976300ca6b315d4179a43767971666582','admin',NULL,'admin','20181009165927-profile_icon_male.jpg',0,'2022-02-12 22:23:51','2022-02-12 22:23:51','2018-08-25 11:56:32',NULL,'2021-05-23 00:00:00','f5KBYqCQ4HlxJVPe',NULL,NULL,'103.211.53.7',NULL,1,'2021-08-03 12:59:14','0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `aauth_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1321,4 +1322,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-12  6:46:46
+-- Dump completed on 2022-02-12 18:29:20
