@@ -46,7 +46,7 @@ class Add_column extends Admin
                         }
 
 			if( !$this->db->field_exists('created_at', $val['myTables']) ) {
-                                $fields['created_at'] = array('type' => 'TIMESTAMP');
+                                $fields['created_at'] = array('type' => 'TIMESTAMP', 'null' => TRUE, 'default' => NULL);
                         }
 
 			$this->dbforge->add_column($val['myTables'], $fields);
