@@ -1,0 +1,531 @@
+{
+    "type": "post",
+    "url": "/event_equipment_checkout/add",
+    "title": "Add Event equipment checkout.",
+    "version": "0.1.0",
+    "name": "Addevent_equipment_checkout",
+    "group": "event_equipment_checkout",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Api-Key",
+            "description": "<p>Event equipment checkout unique access-key.</p>"
+          }
+          ,
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Token",
+            "description": "<p>Event equipment checkout unique token.</p>"
+          }
+                  ]
+      }
+    },
+    "permission": [
+      {
+        "name": "Event equipment checkout Cant be Accessed permission name : api_event_equipment_checkout_add"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+                    {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "Event_id",
+            "description": "<p>Mandatory event_id of Event equipment checkouts Input Event Id Max Length : 11..</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "Equipment_id",
+            "description": "<p>Mandatory equipment_id of Event equipment checkouts Input Equipment Id Max Length : 11..</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "Equipment_out_datetime",
+            "description": "<p>Optional equipment_out_datetime of Event equipment checkouts .</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "Status",
+            "description": "<p>status response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "Message",
+            "description": "<p>message response api.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ValidationError",
+            "description": "<p>Error validation.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 403 Not Acceptable",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/Event_equipment_checkout.php",
+    "groupTitle": "Event equipment checkout"
+  },
+  {
+    "type": "get",
+    "url": "/event_equipment_checkout/all",
+    "title": "Get all Event equipment checkouts.",
+    "version": "0.1.0",
+    "name": "Allevent_equipment_checkout",
+    "group": "event_equipment_checkout",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Api-Key",
+            "description": "<p>Event equipment checkouts unique access-key.</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Token",
+            "description": "<p>Event equipment checkouts unique token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "{} Cant be Accessed permission name : api_Event equipment checkout_all"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+         
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "Field",
+            "defaultValue": "All Field",
+            "description": "<p>Optional field of Event equipment checkouts.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "Start",
+            "defaultValue": "0",
+            "description": "<p>Optional start index of Event equipment checkouts.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "Limit",
+            "defaultValue": "10",
+            "description": "<p>Optional limit data of Event equipment checkouts.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "Status",
+            "description": "<p>status response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "Message",
+            "description": "<p>message response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "Data",
+            "description": "<p>data of Event equipment checkout.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NoDataEvent equipment checkout",
+            "description": "<p>Event equipment checkout data is nothing.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 403 Not Acceptable",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/Event equipment checkout.php",
+    "groupTitle": "Event equipment checkout"
+  },
+  {
+    "type": "post",
+    "url": "/Event equipment checkout/delete",
+    "title": "Delete Event equipment checkout.",
+    "version": "0.1.0",
+    "name": "Deleteevent_equipment_checkout",
+    "group": "event_equipment_checkout",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Api-Key",
+            "description": "<p>Event equipment checkouts unique access-key.</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Token",
+            "description": "<p>Event equipment checkouts unique token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "Event equipment checkout Cant be Accessed permission name : api_Event equipment checkout_delete"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Integer",
+            "optional": false,
+            "field": "Id",
+            "description": "<p>Mandatory id of Event equipment checkouts .</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "Status",
+            "description": "<p>status response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "Message",
+            "description": "<p>message response api.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ValidationError",
+            "description": "<p>Error validation.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 403 Not Acceptable",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/Event equipment checkout.php",
+    "groupTitle": "Event equipment checkout"
+  },
+  {
+    "type": "get",
+    "url": "/Event equipment checkout/detail",
+    "title": "Detail Event equipment checkout.",
+    "version": "0.1.0",
+    "name": "Detailevent_equipment_checkout",
+    "group": "event_equipment_checkout",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Api-Key",
+            "description": "<p>Event equipment checkouts unique access-key.</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Token",
+            "description": "<p>Event equipment checkouts unique token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "Event equipment checkout Cant be Accessed permission name : api_Event equipment checkout_detail"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Integer",
+            "optional": false,
+            "field": "Id",
+            "description": "<p>Mandatory id of Event equipment checkouts.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "Status",
+            "description": "<p>status response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "Message",
+            "description": "<p>message response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "Data",
+            "description": "<p>data of Event equipment checkout.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Event equipment checkoutNotFound",
+            "description": "<p>Event equipment checkout data is not found.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 403 Not Acceptable",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/Event equipment checkout.php",
+    "groupTitle": "Event equipment checkout"
+  },
+  {
+    "type": "post",
+    "url": "/Event equipment checkout/update",
+    "title": "Update Event equipment checkout.",
+    "version": "0.1.0",
+    "name": "Updateevent_equipment_checkout",
+    "group": "event_equipment_checkout",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Api-Key",
+            "description": "<p>Event equipment checkouts unique access-key.</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Token",
+            "description": "<p>Event equipment checkouts unique token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "Event equipment checkout Cant be Accessed permission name : api_Event equipment checkout_update"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+                    {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "Event_id",
+            "description": "<p>Mandatory event_id of Event equipment checkouts Input Event Id Max Length : 11..</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "Equipment_id",
+            "description": "<p>Mandatory equipment_id of Event equipment checkouts Input Equipment Id Max Length : 11..</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "Equipment_out_datetime",
+            "description": "<p>Optional equipment_out_datetime of Event equipment checkouts .</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "Status",
+            "description": "<p>status response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "Message",
+            "description": "<p>message response api.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ValidationError",
+            "description": "<p>Error validation.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 403 Not Acceptable",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/Event equipment checkout.php",
+    "groupTitle": "Event equipment checkout"
+  }

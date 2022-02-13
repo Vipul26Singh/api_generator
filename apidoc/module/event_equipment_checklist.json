@@ -1,0 +1,517 @@
+{
+    "type": "post",
+    "url": "/event_equipment_checklist/add",
+    "title": "Add Event equipment checklist.",
+    "version": "0.1.0",
+    "name": "Addevent_equipment_checklist",
+    "group": "event_equipment_checklist",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Api-Key",
+            "description": "<p>Event equipment checklist unique access-key.</p>"
+          }
+          ,
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Token",
+            "description": "<p>Event equipment checklist unique token.</p>"
+          }
+                  ]
+      }
+    },
+    "permission": [
+      {
+        "name": "Event equipment checklist Cant be Accessed permission name : api_event_equipment_checklist_add"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+                    {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "Event_id",
+            "description": "<p>Mandatory event_id of Event equipment checklists Input Event Id Max Length : 11..</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "Equipment_id",
+            "description": "<p>Mandatory equipment_id of Event equipment checklists Input Equipment Id Max Length : 11..</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "Status",
+            "description": "<p>status response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "Message",
+            "description": "<p>message response api.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ValidationError",
+            "description": "<p>Error validation.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 403 Not Acceptable",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/Event_equipment_checklist.php",
+    "groupTitle": "Event equipment checklist"
+  },
+  {
+    "type": "get",
+    "url": "/event_equipment_checklist/all",
+    "title": "Get all Event equipment checklists.",
+    "version": "0.1.0",
+    "name": "Allevent_equipment_checklist",
+    "group": "event_equipment_checklist",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Api-Key",
+            "description": "<p>Event equipment checklists unique access-key.</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Token",
+            "description": "<p>Event equipment checklists unique token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "{} Cant be Accessed permission name : api_Event equipment checklist_all"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+         
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "Field",
+            "defaultValue": "All Field",
+            "description": "<p>Optional field of Event equipment checklists.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "Start",
+            "defaultValue": "0",
+            "description": "<p>Optional start index of Event equipment checklists.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "Limit",
+            "defaultValue": "10",
+            "description": "<p>Optional limit data of Event equipment checklists.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "Status",
+            "description": "<p>status response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "Message",
+            "description": "<p>message response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "Data",
+            "description": "<p>data of Event equipment checklist.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NoDataEvent equipment checklist",
+            "description": "<p>Event equipment checklist data is nothing.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 403 Not Acceptable",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/Event equipment checklist.php",
+    "groupTitle": "Event equipment checklist"
+  },
+  {
+    "type": "post",
+    "url": "/Event equipment checklist/delete",
+    "title": "Delete Event equipment checklist.",
+    "version": "0.1.0",
+    "name": "Deleteevent_equipment_checklist",
+    "group": "event_equipment_checklist",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Api-Key",
+            "description": "<p>Event equipment checklists unique access-key.</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Token",
+            "description": "<p>Event equipment checklists unique token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "Event equipment checklist Cant be Accessed permission name : api_Event equipment checklist_delete"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Integer",
+            "optional": false,
+            "field": "Id",
+            "description": "<p>Mandatory id of Event equipment checklists .</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "Status",
+            "description": "<p>status response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "Message",
+            "description": "<p>message response api.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ValidationError",
+            "description": "<p>Error validation.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 403 Not Acceptable",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/Event equipment checklist.php",
+    "groupTitle": "Event equipment checklist"
+  },
+  {
+    "type": "get",
+    "url": "/Event equipment checklist/detail",
+    "title": "Detail Event equipment checklist.",
+    "version": "0.1.0",
+    "name": "Detailevent_equipment_checklist",
+    "group": "event_equipment_checklist",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Api-Key",
+            "description": "<p>Event equipment checklists unique access-key.</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Token",
+            "description": "<p>Event equipment checklists unique token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "Event equipment checklist Cant be Accessed permission name : api_Event equipment checklist_detail"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Integer",
+            "optional": false,
+            "field": "Id",
+            "description": "<p>Mandatory id of Event equipment checklists.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "Status",
+            "description": "<p>status response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "Message",
+            "description": "<p>message response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "Data",
+            "description": "<p>data of Event equipment checklist.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Event equipment checklistNotFound",
+            "description": "<p>Event equipment checklist data is not found.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 403 Not Acceptable",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/Event equipment checklist.php",
+    "groupTitle": "Event equipment checklist"
+  },
+  {
+    "type": "post",
+    "url": "/Event equipment checklist/update",
+    "title": "Update Event equipment checklist.",
+    "version": "0.1.0",
+    "name": "Updateevent_equipment_checklist",
+    "group": "event_equipment_checklist",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Api-Key",
+            "description": "<p>Event equipment checklists unique access-key.</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "X-Token",
+            "description": "<p>Event equipment checklists unique token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "Event equipment checklist Cant be Accessed permission name : api_Event equipment checklist_update"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+                    {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "Event_id",
+            "description": "<p>Mandatory event_id of Event equipment checklists Input Event Id Max Length : 11..</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "Equipment_id",
+            "description": "<p>Mandatory equipment_id of Event equipment checklists Input Equipment Id Max Length : 11..</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "Status",
+            "description": "<p>status response api.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "Message",
+            "description": "<p>message response api.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ValidationError",
+            "description": "<p>Error validation.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 403 Not Acceptable",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "application/controllers/api/Event equipment checklist.php",
+    "groupTitle": "Event equipment checklist"
+  }
