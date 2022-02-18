@@ -86,7 +86,7 @@ class Rest extends Admin
 
 		$this->form_validation->set_rules('table_name', 'Table', 'trim|required|callback_valid_table_avaiable');
 		$this->form_validation->set_rules('subject', 'Subject', 'trim|required|alpha_numeric_spaces');
-		$this->form_validation->set_rules('primary_key', 'Primary Key of Table', 'trim|required');
+		//$this->form_validation->set_rules('primary_key', 'Primary Key of Table', 'trim|required');
 
 		echo $this->save_rest();
 	}
@@ -126,7 +126,7 @@ class Rest extends Admin
 		}
 
 		$this->form_validation->set_rules('subject', 'Subject', 'trim|required|alpha_numeric_spaces');
-		$this->form_validation->set_rules('primary_key', 'Primary Key of Table', 'trim|required');
+		//$this->form_validation->set_rules('primary_key', 'Primary Key of Table', 'trim|required');
 
 		echo $this->save_rest();
 	}

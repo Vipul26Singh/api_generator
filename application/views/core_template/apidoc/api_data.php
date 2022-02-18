@@ -1,3 +1,4 @@
+<?php if (!empty($primary_key)): ?>
 {
     "type": "post",
     "url": "/{table_name}/add",
@@ -99,6 +100,7 @@
     "filename": "application/controllers/api/<?= ucfirst($table_name); ?>.php",
     "groupTitle": "{table_name_uc_no_space}"
   },
+<?php endif; ?>
   {
     "type": "get",
     "url": "/{table_name}/all",
@@ -218,6 +220,7 @@
     "filename": "application/controllers/api/{table_name_uc_no_space}.php",
     "groupTitle": "{table_name_uc_no_space}"
   },
+<?php if (!empty($primary_key)): ?>
   {
     "type": "post",
     "url": "/{table_name_uc_no_space}/delete",
@@ -312,6 +315,7 @@
     "filename": "application/controllers/api/{table_name_uc_no_space}.php",
     "groupTitle": "{table_name_uc_no_space}"
   },
+<?php endif; ?>
   {
     "type": "get",
     "url": "/{table_name_uc_no_space}/detail",
@@ -412,7 +416,9 @@
     },
     "filename": "application/controllers/api/{table_name_uc_no_space}.php",
     "groupTitle": "{table_name_uc_no_space}"
-  },
+  }
+<?php if (!empty($primary_key) ): ?>
+,
   {
     "type": "post",
     "url": "/{table_name_uc_no_space}/update",
@@ -512,3 +518,4 @@
     "filename": "application/controllers/api/{table_name_uc_no_space}.php",
     "groupTitle": "{table_name_uc_no_space}"
   }
+<?php endif; ?>

@@ -61,7 +61,12 @@ class <?= ucfirst($table_name); ?> extends API
 		foreach (${table_name}s as ${table_name}) {
 			<?php foreach ($files as $file){ 
 				if (in_array($file, $show_in_column)) {
-			?>${table_name}-><?=$file;?>  = BASE_URL.'uploads/{table_name}/'.${table_name}-><?=$file;?>;
+				?>
+				if(!empty(${table_name}-><?=$file;?>)) {
+					${table_name}-><?=$file;?>  = BASE_URL.'uploads/{table_name}/'.${table_name}-><?=$file;?>;
+				} else {
+					${table_name}-><?=$file;?>  = ${table_name}-><?=$file;?>;
+				}
 			<?php } 
 				}
 			?>${table_name}_arr[] = ${table_name};
@@ -122,7 +127,12 @@ class <?= ucfirst($table_name); ?> extends API
 			<?php if ($files = $this->crud_builder->getFieldFile()): 
 			foreach ($files as $file){ 
 				if (in_array($file, $show_in_column)) {
-			?>$data['{table_name}']-><?= $file; ?> = BASE_URL.'uploads/{table_name}/'.$data['{table_name}']-><?= $file; ?>;
+				?>
+				if(!empty(${table_name}-><?=$file;?>)) {
+					$data['{table_name}']-><?= $file; ?> = BASE_URL.'uploads/{table_name}/'.$data['{table_name}']-><?= $file; ?>;
+				} else {
+					$data['{table_name}']-><?= $file; ?> = $data['{table_name}']-><?= $file; ?>;
+				}
 			<?php } 
 			}
 			endif; ?>
