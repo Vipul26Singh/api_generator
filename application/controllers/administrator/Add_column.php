@@ -23,7 +23,7 @@ class Add_column extends Admin
 	 */
 	public function index()
 	{
-		$tables=$this->db->query("SELECT t.TABLE_NAME AS myTables FROM INFORMATION_SCHEMA.TABLES AS t WHERE t.TABLE_SCHEMA = '{$this->db->database}' ")->result_array();    
+		$tables=$this->db->query("SELECT t.TABLE_NAME AS myTables FROM INFORMATION_SCHEMA.TABLES AS t WHERE t.TABLE_SCHEMA = '{$this->db->database}' and t.TABLE_TYPE = 'BASE TABLE'")->result_array();    
 		foreach($tables as $key => $val) {
 			$this->load->dbforge();
 
