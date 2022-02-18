@@ -1837,13 +1837,6 @@ define({ "api": [{
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "Username",
-            "description": "<p>Mandatory username of Users.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
             "field": "Email",
             "description": "<p>Mandatory email of Users.</p>"
           },
@@ -1952,8 +1945,8 @@ define({ "api": [{
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "Username",
-            "description": "<p>Mandatory username of Users.</p>"
+            "field": "full_name",
+            "description": "<p>Mandatory Full Name of Users.</p>"
           },
           {
             "group": "Parameter",
@@ -2390,8 +2383,8 @@ define({ "api": [{
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "Username",
-            "description": "<p>Mandatory username of Users.</p>"
+            "field": "Email",
+            "description": "<p>Mandatory email of Users.</p>"
           },
           {
             "group": "Parameter",
@@ -2451,7 +2444,7 @@ define({ "api": [{
             "group": "Error 4xx",
             "optional": false,
             "field": "InvalidCredential",
-            "description": "<p>The username or password is invalid.</p>"
+            "description": "<p>The email or password is invalid.</p>"
           }
         ]
       },
@@ -2498,8 +2491,8 @@ define({ "api": [{
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "Username",
-            "description": "<p>Mandatory username of Users.</p>"
+            "field": "Email",
+            "description": "<p>Mandatory eamil of Users.</p>"
           },
           {
             "group": "Parameter",

@@ -38,11 +38,11 @@ class User extends API
 	 */
 	public function login_post()
 	{
-		$this->form_validation->set_rules('username', 'Username', 'trim|required');
+		$this->form_validation->set_rules('email', 'Email', 'trim|required');
 		$this->form_validation->set_rules('password', 'Password', 'trim|required');
 
 		if ($this->form_validation->run()) {
-			if ($user = $this->login($this->post('username'), $this->post('password'))) {
+			if ($user = $this->login($this->post('email'), $this->post('password'))) {
 				
 		        $token = $this->jwtEncode(['id' => $user->id]);
 
@@ -93,11 +93,11 @@ class User extends API
 	 */
 	public function request_token_post()
 	{
-		$this->form_validation->set_rules('username', 'Username', 'trim|required');
+		$this->form_validation->set_rules('email', 'Email', 'trim|required');
 		$this->form_validation->set_rules('password', 'Password', 'trim|required');
 
 		if ($this->form_validation->run()) {
-			if ($user = $this->login($this->post('username'), $this->post('password'))) {
+			if ($user = $this->login($this->post('email'), $this->post('password'))) {
 				
 		        $token = $this->jwtEncode(['id' => $user->id]);
 		        $exp = $this->config->item('sess_expiration');
@@ -261,7 +261,7 @@ class User extends API
 	{
 		$this->is_allowed('api_user_add');
 
-		$this->form_validation->set_rules('username', 'Username', 'trim|required|is_unique[aauth_users.username]');
+		//$this->form_validation->set_rules('username', 'Username', 'trim|required|is_unique[aauth_users.username]');
 		$this->form_validation->set_rules('email', 'Email', 'trim|required|is_unique[aauth_users.email]|valid_email');
 		$this->form_validation->set_rules('full_name', 'Full Name', 'trim|required');
 		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]');
@@ -286,7 +286,7 @@ class User extends API
 				$save_data['avatar'] = $upload['file_name'];
 			}
 
-			$save_user = $this->aauth->create_user($this->post('email'), $this->post('password'), $this->post('username'), $save_data);
+			$save_user = $this->aauth->create_user($this->post('email'), $this->post('password'), $this->post('email'), $save_data);
 
 			if ($save_user) {
 				$group = json_decode($this->post('group'));
@@ -344,7 +344,7 @@ class User extends API
        public function signup_post()
         {
 
-                $this->form_validation->set_rules('username', 'Username', 'trim|required|is_unique[aauth_users.username]');
+                //$this->form_validation->set_rules('username', 'Username', 'trim|required|is_unique[aauth_users.username]');
                 $this->form_validation->set_rules('email', 'Email', 'trim|required|is_unique[aauth_users.email]|valid_email');
                 $this->form_validation->set_rules('full_name', 'Full Name', 'trim|required');
                 $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]');
@@ -368,7 +368,7 @@ class User extends API
                                 $save_data['avatar'] = $upload['file_name'];
                         }
 
-                        $save_user = $this->aauth->create_user($this->post('email'), $this->post('password'), $this->post('username'), $save_data);
+                        $save_user = $this->aauth->create_user($this->post('email'), $this->post('password'), $this->post('email'), $save_data);
                         if ($save_user) {
                                 $group = json_decode($this->post('group'));
 
