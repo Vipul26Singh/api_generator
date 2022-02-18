@@ -319,6 +319,88 @@ class User extends API
 	}
 
 	/**
+         * @api {post} /user/signup Add User.
+         * @apiVersion 0.1.0
+         * @apiName SignupUser
+         * @apiGroup User
+         * @apiHeader {String} X-Api-Key Users unique access-key.
+         *
+         * @apiParam {String} Username Mandatory username of Users.
+         * @apiParam {String} Email Mandatory email of Users.
+         * @apiParam {String} Password password of Users.
+         *
+         * @apiSuccess {Boolean} Status status response api.
+         * @apiSuccess {String} Message message response api.
+         *
+         * @apiSuccessExample Success-Response:
+         *     HTTP/1.1 200 OK
+         *
+         * @apiError ValidationError Error validation.
+         *
+         * @apiErrorExample Error-Response:
+         *     HTTP/1.1 403 Not Acceptable
+         *
+         */
+       public function signup_post()
+        {
+
+                $this->form_validation->set_rules('username', 'Username', 'trim|required|is_unique[aauth_users.username]');
+                $this->form_validation->set_rules('email', 'Email', 'trim|required|is_unique[aauth_users.email]|valid_email');
+                $this->form_validation->set_rules('full_name', 'Full Name', 'trim|required');
+                $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]');
+
+                if ($this->form_validation->run()) {
+
+                        $save_data = [
+                                'full_name'     => $this->post('full_name'),
+                                'date_created'  => date('Y-m-d H:i:s')
+                        ];
+
+                        $config = [
+                                'upload_path'   => './uploads/user/',
+                                'allowed_types' => 'gif|jpg|png',
+                                'max_size'      => '8000',
+                                'required'              => false
+                        ];
+
+                        if ($upload = $this->upload_file('avatar', $config)){
+                                $upload_data = $this->upload->data();
+                                $save_data['avatar'] = $upload['file_name'];
+                        }
+
+                        $save_user = $this->aauth->create_user($this->post('email'), $this->post('password'), $this->post('username'), $save_data);
+                        if ($save_user) {
+                                $group = json_decode($this->post('group'));
+
+                                if (is_array($group) AND count($group)) {
+                                        $user_id = $save_user;
+                                        foreach ($this->post('group') as $group_id) {
+                                                $this->aauth->add_member($user_id, $group_id);
+                                        }
+                                }
+
+                                $this->response([
+                                        'status'        => true,
+                                        'message'       => 'Your data has been successfully stored into the database'
+                                ], API::HTTP_OK);
+
+                        } else {
+                                $this->response([
+                                        'status'        => false,
+                                        'message'       => $this->aauth->print_errors()
+                                ], API::HTTP_NOT_ACCEPTABLE);
+                        }
+
+                } else {
+                        $this->response([
+                                'status'        => false,
+                                'message'       => validation_errors()
+                        ], API::HTTP_NOT_ACCEPTABLE);
+                }
+        }
+
+
+	/**
 	 * @api {post} /user/update Update User.
 	 * @apiVersion 0.1.0
 	 * @apiName UpdateUser

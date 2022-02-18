@@ -186,11 +186,11 @@ function goBack() {
                            <td>
                               <?php if (!empty($events_past->event_image)): ?>
                                 <?php if (is_image($events_past->event_image)): ?>
-                                <a class="fancybox" rel="group" href="<?= BASE_URL . 'uploads/events_past/' . $events_past->event_image; ?>">
-                                  <img src="<?= BASE_URL . 'uploads/events_past/' . $events_past->event_image; ?>" class="image-responsive" alt="image events_past" title="event_image events_past" width="40px">
+                                <a class="fancybox" rel="group" href="<?= BASE_URL . 'uploads/events/' . $events_past->event_image; ?>">
+                                  <img src="<?= BASE_URL . 'uploads/events/' . $events_past->event_image; ?>" class="image-responsive" alt="image events_past" title="event_image events_past" width="40px">
                                 </a>
                                 <?php else: ?>
-                                  <a href="<?= BASE_URL . 'administrator/file/download/events_past/' . $events_past->event_image; ?>">
+                                  <a href="<?= BASE_URL . 'administrator/file/download/events/' . $events_past->event_image; ?>">
                                    <img src="<?= get_icon_file($events_past->event_image); ?>" class="image-responsive image-icon" alt="image events_past" title="event_image <?= $events_past->event_image; ?>" width="40px"> 
                                  </a>
                                 <?php endif; ?>

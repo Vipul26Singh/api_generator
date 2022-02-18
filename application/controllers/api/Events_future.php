@@ -56,7 +56,7 @@ class Events_future extends API
 
 		foreach ($events_futures as $events_future) {
 							if(!empty($events_future->event_image)) {
-					$events_future->event_image  = BASE_URL.'uploads/events_future/'.$events_future->event_image;
+					$events_future->event_image  = BASE_URL.'uploads/events/'.$events_future->event_image;
 				} else {
 					$events_future->event_image  = $events_future->event_image;
 				}
@@ -110,7 +110,7 @@ class Events_future extends API
 
 		if ($data['events_future']) {
 							if(!empty($events_future->event_image)) {
-					$data['events_future']->event_image = BASE_URL.'uploads/events_future/'.$data['events_future']->event_image;
+					$data['events_future']->event_image = BASE_URL.'uploads/events/'.$data['events_future']->event_image;
 				} else {
 					$data['events_future']->event_image = $data['events_future']->event_image;
 				}

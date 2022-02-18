@@ -56,7 +56,7 @@ class Events_ongoing extends API
 
 		foreach ($events_ongoings as $events_ongoing) {
 							if(!empty($events_ongoing->event_image)) {
-					$events_ongoing->event_image  = BASE_URL.'uploads/events_ongoing/'.$events_ongoing->event_image;
+					$events_ongoing->event_image  = BASE_URL.'uploads/events/'.$events_ongoing->event_image;
 				} else {
 					$events_ongoing->event_image  = $events_ongoing->event_image;
 				}
@@ -110,7 +110,7 @@ class Events_ongoing extends API
 
 		if ($data['events_ongoing']) {
 							if(!empty($events_ongoing->event_image)) {
-					$data['events_ongoing']->event_image = BASE_URL.'uploads/events_ongoing/'.$data['events_ongoing']->event_image;
+					$data['events_ongoing']->event_image = BASE_URL.'uploads/events/'.$data['events_ongoing']->event_image;
 				} else {
 					$data['events_ongoing']->event_image = $data['events_ongoing']->event_image;
 				}
@@ -143,7 +143,7 @@ class Events_ongoing extends API
 	 * @apiParam {String} Event_location Mandatory event_location of Events ongoings. Input Event Location Max Length : 4096. 
 	 * @apiParam {String} [Check_in_date] Optional check_in_date of Events ongoings.  
 	 * @apiParam {String} [Check_out_date] Optional check_out_date of Events ongoings.  
-	 * @apiParam {File} Event_image Mandatory event_image of Events ongoings. Input Event Image Max Length : 4096. 
+	 * @apiParam {File} Event_image Mandatory event_image of Events ongoings.  
 	 *
 	 * @apiSuccess {Boolean} Status status response api.
 	 * @apiSuccess {String} Message message response api.
@@ -227,7 +227,7 @@ class Events_ongoing extends API
 	 * @apiParam {String} Event_location Mandatory event_location of Events ongoings. Input Event Location Max Length : 4096. 
 	 * @apiParam {String} [Check_in_date] Optional check_in_date of Events ongoings.  
 	 * @apiParam {String} [Check_out_date] Optional check_out_date of Events ongoings.  
-	 * @apiParam {File} Event_image Mandatory event_image of Events ongoings. Input Event Image Max Length : 4096. 
+	 * @apiParam {File} Event_image Mandatory event_image of Events ongoings.  
 	 * @apiParam {Integer}  Mandatory  of Events Ongoing.
 	 *
 	 * @apiSuccess {Boolean} Status status response api.

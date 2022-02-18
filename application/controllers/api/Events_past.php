@@ -55,18 +55,8 @@ class Events_past extends API
 		$events_past_arr = [];
 
 		foreach ($events_pasts as $events_past) {
-							if(!empty($events_past->check_in_date)) {
-					$events_past->check_in_date  = BASE_URL.'uploads/events_past/'.$events_past->check_in_date;
-				} else {
-					$events_past->check_in_date  = $events_past->check_in_date;
-				}
-							if(!empty($events_past->check_out_date)) {
-					$events_past->check_out_date  = BASE_URL.'uploads/events_past/'.$events_past->check_out_date;
-				} else {
-					$events_past->check_out_date  = $events_past->check_out_date;
-				}
 							if(!empty($events_past->event_image)) {
-					$events_past->event_image  = BASE_URL.'uploads/events_past/'.$events_past->event_image;
+					$events_past->event_image  = BASE_URL.'uploads/events/'.$events_past->event_image;
 				} else {
 					$events_past->event_image  = $events_past->event_image;
 				}
@@ -119,18 +109,8 @@ class Events_past extends API
 		$data['events_past'] = $this->model_api_events_past->find($id, $select_field);
 
 		if ($data['events_past']) {
-							if(!empty($events_past->check_in_date)) {
-					$data['events_past']->check_in_date = BASE_URL.'uploads/events_past/'.$data['events_past']->check_in_date;
-				} else {
-					$data['events_past']->check_in_date = $data['events_past']->check_in_date;
-				}
-							if(!empty($events_past->check_out_date)) {
-					$data['events_past']->check_out_date = BASE_URL.'uploads/events_past/'.$data['events_past']->check_out_date;
-				} else {
-					$data['events_past']->check_out_date = $data['events_past']->check_out_date;
-				}
 							if(!empty($events_past->event_image)) {
-					$data['events_past']->event_image = BASE_URL.'uploads/events_past/'.$data['events_past']->event_image;
+					$data['events_past']->event_image = BASE_URL.'uploads/events/'.$data['events_past']->event_image;
 				} else {
 					$data['events_past']->event_image = $data['events_past']->event_image;
 				}
@@ -161,9 +141,9 @@ class Events_past extends API
 	 * @apiParam {String} Event_name Mandatory event_name of Events pasts. Input Event Name Max Length : 2048. 
 	 * @apiParam {String} Event_type Mandatory event_type of Events pasts. Input Event Type Max Length : 128. 
 	 * @apiParam {String} Event_location Mandatory event_location of Events pasts. Input Event Location Max Length : 4096. 
-	 * @apiParam {File} Check_in_date Mandatory check_in_date of Events pasts.  
-	 * @apiParam {File} Check_out_date Mandatory check_out_date of Events pasts.  
-	 * @apiParam {File} Event_image Mandatory event_image of Events pasts. Input Event Image Max Length : 4096. 
+	 * @apiParam {String} [Check_in_date] Optional check_in_date of Events pasts.  
+	 * @apiParam {String} [Check_out_date] Optional check_out_date of Events pasts.  
+	 * @apiParam {File} Event_image Mandatory event_image of Events pasts.  
 	 *
 	 * @apiSuccess {Boolean} Status status response api.
 	 * @apiSuccess {String} Message message response api.
@@ -193,31 +173,13 @@ class Events_past extends API
 				'event_name' => $this->input->post('event_name'),
 				'event_type' => $this->input->post('event_type'),
 				'event_location' => $this->input->post('event_location'),
+				'check_in_date' => date('Y-m-d H:i:s'),
+				'check_out_date' => date('Y-m-d H:i:s'),
 			];
 			if (!is_dir(FCPATH . '/uploads/events_past')) {
 				mkdir(FCPATH . '/uploads/events_past');
 			}
 			
-			$config = [
-				'upload_path' 	=> './uploads/events_past/',
-					'required' 		=> true
-			];
-			
-			if ($upload = $this->upload_file('check_in_date', $config)){
-				$upload_data = $this->upload->data();
-				$save_data['check_in_date'] = $upload['file_name'];
-			}
-
-			$config = [
-				'upload_path' 	=> './uploads/events_past/',
-					'required' 		=> true
-			];
-			
-			if ($upload = $this->upload_file('check_out_date', $config)){
-				$upload_data = $this->upload->data();
-				$save_data['check_out_date'] = $upload['file_name'];
-			}
-
 			$config = [
 				'upload_path' 	=> './uploads/events_past/',
 					'required' 		=> true
@@ -263,9 +225,9 @@ class Events_past extends API
 	 * @apiParam {String} Event_name Mandatory event_name of Events pasts. Input Event Name Max Length : 2048. 
 	 * @apiParam {String} Event_type Mandatory event_type of Events pasts. Input Event Type Max Length : 128. 
 	 * @apiParam {String} Event_location Mandatory event_location of Events pasts. Input Event Location Max Length : 4096. 
-	 * @apiParam {File} Check_in_date Mandatory check_in_date of Events pasts.  
-	 * @apiParam {File} Check_out_date Mandatory check_out_date of Events pasts.  
-	 * @apiParam {File} Event_image Mandatory event_image of Events pasts. Input Event Image Max Length : 4096. 
+	 * @apiParam {String} [Check_in_date] Optional check_in_date of Events pasts.  
+	 * @apiParam {String} [Check_out_date] Optional check_out_date of Events pasts.  
+	 * @apiParam {File} Event_image Mandatory event_image of Events pasts.  
 	 * @apiParam {Integer}  Mandatory  of Events Past.
 	 *
 	 * @apiSuccess {Boolean} Status status response api.
@@ -297,31 +259,13 @@ class Events_past extends API
 				'event_name' => $this->input->post('event_name'),
 				'event_type' => $this->input->post('event_type'),
 				'event_location' => $this->input->post('event_location'),
+				'check_in_date' => date('Y-m-d H:i:s'),
+				'check_out_date' => date('Y-m-d H:i:s'),
 			];
 			if (!is_dir(FCPATH . '/uploads/events_past')) {
 				mkdir(FCPATH . '/uploads/events_past');
 			}
 			
-			$config = [
-				'upload_path' 	=> './uploads/events_past/',
-					'required' 		=> true
-			];
-			
-			if ($upload = $this->upload_file('check_in_date', $config)){
-				$upload_data = $this->upload->data();
-				$save_data['check_in_date'] = $upload['file_name'];
-			}
-
-			$config = [
-				'upload_path' 	=> './uploads/events_past/',
-					'required' 		=> true
-			];
-			
-			if ($upload = $this->upload_file('check_out_date', $config)){
-				$upload_data = $this->upload->data();
-				$save_data['check_out_date'] = $upload['file_name'];
-			}
-
 			$config = [
 				'upload_path' 	=> './uploads/events_past/',
 					'required' 		=> true
@@ -391,23 +335,7 @@ class Events_past extends API
 		} else {
 			$delete = $this->model_api_events_past->remove($this->post(''));
 
-			if (!empty($events_past->check_in_date)) {
-				$path = FCPATH . '/uploads/events_past/' . $events_past->check_in_date;
-
-				if (is_file($path)) {
-					$delete_file = unlink($path);
-				}
-			}
-
-		if (!empty($events_past->check_out_date)) {
-				$path = FCPATH . '/uploads/events_past/' . $events_past->check_out_date;
-
-				if (is_file($path)) {
-					$delete_file = unlink($path);
-				}
-			}
-
-		if (!empty($events_past->event_image)) {
+			if (!empty($events_past->event_image)) {
 				$path = FCPATH . '/uploads/events_past/' . $events_past->event_image;
 
 				if (is_file($path)) {
