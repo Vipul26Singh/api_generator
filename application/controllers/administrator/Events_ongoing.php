@@ -4,69 +4,69 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
 *| --------------------------------------------------------------------------
-*| Events Controller
+*| Events Ongoing Controller
 *| --------------------------------------------------------------------------
-*| Events site
+*| Events Ongoing site
 *|
 */
-class Events extends Admin	
+class Events_ongoing extends Admin	
 {
 	
 	public function __construct()
 	{
 		parent::__construct();
 
-		$this->load->model('model_events');
+		$this->load->model('model_events_ongoing');
 	}
 
 	/**
-	* show all Eventss
+	* show all Events Ongoings
 	*
 	* @var $offset String
 	*/
 	public function index($offset = 0)
 	{
-		$this->is_allowed('events_list');
+		$this->is_allowed('events_ongoing_list');
 
 		$filter = $this->input->get('q');
 		$field 	= $this->input->get('f');
 
-		$this->data['eventss'] = $this->model_events->get( $filter, $field, $this->limit_page, $offset);
-		$this->data['events_counts'] = $this->model_events->count_all($filter, $field);
+		$this->data['events_ongoings'] = $this->model_events_ongoing->get( $filter, $field, $this->limit_page, $offset);
+		$this->data['events_ongoing_counts'] = $this->model_events_ongoing->count_all($filter, $field);
 
 		$config = [
-			'base_url'     => 'administrator/events/index/',
-			'total_rows'   => $this->model_events->count_all($filter, $field),
+			'base_url'     => 'administrator/events_ongoing/index/',
+			'total_rows'   => $this->model_events_ongoing->count_all($filter, $field),
 			'per_page'     => $this->limit_page,
 			'uri_segment'  => 4,
 		];
 
 		$this->data['pagination'] = $this->pagination($config);
 
-		$this->template->title('Events List');
-		$this->render('backend/standart/administrator/events/events_list', $this->data);
+		$this->template->title('Events Ongoing List');
+		$this->render('backend/standart/administrator/events_ongoing/events_ongoing_list', $this->data);
 	}
 	
 	/**
-	* Add new eventss
+	* Add new events_ongoings
 	*
 	*/
 	public function add()
 	{
-		$this->is_allowed('events_add');
+		$this->is_allowed('events_ongoing_add');
 
-		$this->template->title('Events New');
-		$this->render('backend/standart/administrator/events/events_add', $this->data);
+		$this->template->title('Events Ongoing New');
+		$this->render('backend/standart/administrator/events_ongoing/events_ongoing_add', $this->data);
 	}
 
 	/**
-	* Add New Eventss
+	* Add New Events Ongoings
 	*
 	* @return JSON
 	*/
 	public function add_save()
 	{
-		if (!$this->is_allowed('events_add', false)) {
+		if (!$this->is_allowed('events_ongoing_add', false)) {
 			echo json_encode([
 				'success' => false,
 				'message' => cclang('sorry_you_do_not_have_permission_to_access')
@@ -74,17 +74,19 @@ class Events extends Admin
 			exit;
 		}
 
+		$this->form_validation->set_rules('id', 'Id', 'trim|required|max_length[11]');
 		$this->form_validation->set_rules('event_name', 'Event Name', 'trim|required|max_length[2048]');
 		$this->form_validation->set_rules('event_type', 'Event Type', 'trim|required|max_length[128]');
 		$this->form_validation->set_rules('event_location', 'Event Location', 'trim|required|max_length[4096]');
-		$this->form_validation->set_rules('events_event_image_name', 'Event Image', 'trim|required|max_length[4096]');
+		$this->form_validation->set_rules('events_ongoing_event_image_name', 'Event Image', 'trim|required|max_length[4096]');
 		
 
 		if ($this->form_validation->run()) {
-			$events_event_image_uuid = $this->input->post('events_event_image_uuid');
-			$events_event_image_name = $this->input->post('events_event_image_name');
+			$events_ongoing_event_image_uuid = $this->input->post('events_ongoing_event_image_uuid');
+			$events_ongoing_event_image_name = $this->input->post('events_ongoing_event_image_name');
 		
 			$save_data = [
+					'id' => ($this->input->post('id') === '') ? NULL : $this->input->post('id'),
 					'event_name' => ($this->input->post('event_name') === '') ? NULL : $this->input->post('event_name'),
 					'event_type' => ($this->input->post('event_type') === '') ? NULL : $this->input->post('event_type'),
 					'event_location' => ($this->input->post('event_location') === '') ? NULL : $this->input->post('event_location'),
@@ -92,17 +94,17 @@ class Events extends Admin
 				'check_out_date' => date('Y-m-d H:i:s'),
 			];
 
-			if (!is_dir(FCPATH . '/uploads/events/')) {
-				mkdir(FCPATH . '/uploads/events/');
+			if (!is_dir(FCPATH . '/uploads/events_ongoing/')) {
+				mkdir(FCPATH . '/uploads/events_ongoing/');
 			}
 
-			if (!empty($events_event_image_name)) {
-				$events_event_image_name_copy = date('YmdHis') . '-' . $events_event_image_name;
+			if (!empty($events_ongoing_event_image_name)) {
+				$events_ongoing_event_image_name_copy = date('YmdHis') . '-' . $events_ongoing_event_image_name;
 
-				rename(FCPATH . 'uploads/tmp/' . $events_event_image_uuid . '/' . $events_event_image_name, 
-						FCPATH . 'uploads/events/' . $events_event_image_name_copy);
+				rename(FCPATH . 'uploads/tmp/' . $events_ongoing_event_image_uuid . '/' . $events_ongoing_event_image_name, 
+						FCPATH . 'uploads/events_ongoing/' . $events_ongoing_event_image_name_copy);
 
-				if (!is_file(FCPATH . '/uploads/events/' . $events_event_image_name_copy)) {
+				if (!is_file(FCPATH . '/uploads/events_ongoing/' . $events_ongoing_event_image_name_copy)) {
 					echo json_encode([
 						'success' => false,
 						'message' => 'Error uploading file'
@@ -110,28 +112,28 @@ class Events extends Admin
 					exit;
 				}
 
-				$save_data['event_image'] = $events_event_image_name_copy;
+				$save_data['event_image'] = $events_ongoing_event_image_name_copy;
 			}
 		
 			
-			$save_events = $this->model_events->store($save_data);
+			$save_events_ongoing = $this->model_events_ongoing->store($save_data);
 
-			if ($save_events) {
-				$this->data['id']          = $save_events;
+			if ($save_events_ongoing) {
+				$this->data['id']          = $save_events_ongoing;
 				if ($this->input->post('save_type') == 'stay') {
 					$this->data['success'] = true;
 					$this->data['message'] = cclang('success_save_data_stay', [
-						anchor('administrator/events/edit/' . $save_events, 'Edit Events'),
-						anchor('administrator/events', ' Go back to list')
+						anchor('administrator/events_ongoing/edit/' . $save_events_ongoing, 'Edit Events Ongoing'),
+						anchor('administrator/events_ongoing', ' Go back to list')
 					]);
 				} else {
 					set_message(
 						cclang('success_save_data_redirect', [
-						anchor('administrator/events/edit/' . $save_events, 'Edit Events')
+						anchor('administrator/events_ongoing/edit/' . $save_events_ongoing, 'Edit Events Ongoing')
 					]), 'success');
 
             		$this->data['success'] = true;
-					$this->data['redirect'] = base_url('administrator/events');
+					$this->data['redirect'] = base_url('administrator/events_ongoing');
 				}
 			} else {
 				if ($this->input->post('save_type') == 'stay') {
@@ -140,7 +142,7 @@ class Events extends Admin
 				} else {
             		$this->data['success'] = false;
             		$this->data['message'] = cclang('data_not_change');
-					$this->data['redirect'] = base_url('administrator/events');
+					$this->data['redirect'] = base_url('administrator/events_ongoing');
 				}
 			}
 
@@ -153,28 +155,28 @@ class Events extends Admin
 	}
 	
 		/**
-	* Update view Eventss
+	* Update view Events Ongoings
 	*
 	* @var $id String
 	*/
 	public function edit($id)
 	{
-		$this->is_allowed('events_update');
+		$this->is_allowed('events_ongoing_update');
 
-		$this->data['events'] = $this->model_events->find($id);
+		$this->data['events_ongoing'] = $this->model_events_ongoing->find($id);
 
-		$this->template->title('Events Update');
-		$this->render('backend/standart/administrator/events/events_update', $this->data);
+		$this->template->title('Events Ongoing Update');
+		$this->render('backend/standart/administrator/events_ongoing/events_ongoing_update', $this->data);
 	}
 
 	/**
-	* Update Eventss
+	* Update Events Ongoings
 	*
 	* @var $id String
 	*/
 	public function edit_save($id)
 	{
-		if (!$this->is_allowed('events_update', false)) {
+		if (!$this->is_allowed('events_ongoing_update', false)) {
 			echo json_encode([
 				'success' => false,
 				'message' => cclang('sorry_you_do_not_have_permission_to_access')
@@ -182,16 +184,18 @@ class Events extends Admin
 			exit;
 		}
 		
+		$this->form_validation->set_rules('id', 'Id', 'trim|required|max_length[11]');
 		$this->form_validation->set_rules('event_name', 'Event Name', 'trim|required|max_length[2048]');
 		$this->form_validation->set_rules('event_type', 'Event Type', 'trim|required|max_length[128]');
 		$this->form_validation->set_rules('event_location', 'Event Location', 'trim|required|max_length[4096]');
-		$this->form_validation->set_rules('events_event_image_name', 'Event Image', 'trim|required|max_length[4096]');
+		$this->form_validation->set_rules('events_ongoing_event_image_name', 'Event Image', 'trim|required|max_length[4096]');
 		
 		if ($this->form_validation->run()) {
-			$events_event_image_uuid = $this->input->post('events_event_image_uuid');
-			$events_event_image_name = $this->input->post('events_event_image_name');
+			$events_ongoing_event_image_uuid = $this->input->post('events_ongoing_event_image_uuid');
+			$events_ongoing_event_image_name = $this->input->post('events_ongoing_event_image_name');
 		
 			$save_data = [
+					'id' => ($this->input->post('id') === '') ? NULL : $this->input->post('id'),
 					'event_name' => ($this->input->post('event_name') === '') ? NULL : $this->input->post('event_name'),
 					'event_type' => ($this->input->post('event_type') === '') ? NULL : $this->input->post('event_type'),
 					'event_location' => ($this->input->post('event_location') === '') ? NULL : $this->input->post('event_location'),
@@ -199,17 +203,17 @@ class Events extends Admin
 				'check_out_date' => date('Y-m-d H:i:s'),
 			];
 
-			if (!is_dir(FCPATH . '/uploads/events/')) {
-				mkdir(FCPATH . '/uploads/events/');
+			if (!is_dir(FCPATH . '/uploads/events_ongoing/')) {
+				mkdir(FCPATH . '/uploads/events_ongoing/');
 			}
 
-			if (!empty($events_event_image_uuid)) {
-				$events_event_image_name_copy = date('YmdHis') . '-' . $events_event_image_name;
+			if (!empty($events_ongoing_event_image_uuid)) {
+				$events_ongoing_event_image_name_copy = date('YmdHis') . '-' . $events_ongoing_event_image_name;
 
-				rename(FCPATH . 'uploads/tmp/' . $events_event_image_uuid . '/' . $events_event_image_name, 
-						FCPATH . 'uploads/events/' . $events_event_image_name_copy);
+				rename(FCPATH . 'uploads/tmp/' . $events_ongoing_event_image_uuid . '/' . $events_ongoing_event_image_name, 
+						FCPATH . 'uploads/events_ongoing/' . $events_ongoing_event_image_name_copy);
 
-				if (!is_file(FCPATH . '/uploads/events/' . $events_event_image_name_copy)) {
+				if (!is_file(FCPATH . '/uploads/events_ongoing/' . $events_ongoing_event_image_name_copy)) {
 					echo json_encode([
 						'success' => false,
 						'message' => 'Error uploading file'
@@ -217,19 +221,19 @@ class Events extends Admin
 					exit;
 				}
 
-				$save_data['event_image'] = $events_event_image_name_copy;
+				$save_data['event_image'] = $events_ongoing_event_image_name_copy;
 			}
 		
 			
 
-			$save_events = $this->model_events->change($id, $save_data);
+			$save_events_ongoing = $this->model_events_ongoing->change($id, $save_data);
 
-			if ($save_events) {
+			if ($save_events_ongoing) {
 				if ($this->input->post('save_type') == 'stay') {
 					$this->data['success'] = true;
 					$this->data['id'] 	   = $id;
 					$this->data['message'] = cclang('success_update_data_stay', [
-						anchor('administrator/events', ' Go back to list')
+						anchor('administrator/events_ongoing', ' Go back to list')
 					]);
 				} else {
 					set_message(
@@ -237,7 +241,7 @@ class Events extends Admin
 					]), 'success');
 
             		$this->data['success'] = true;
-					$this->data['redirect'] = base_url('administrator/events');
+					$this->data['redirect'] = base_url('administrator/events_ongoing');
 				}
 			} else {
 				if ($this->input->post('save_type') == 'stay') {
@@ -246,7 +250,7 @@ class Events extends Admin
 				} else {
             		$this->data['success'] = false;
             		$this->data['message'] = cclang('data_not_change');
-					$this->data['redirect'] = base_url('administrator/events');
+					$this->data['redirect'] = base_url('administrator/events_ongoing');
 				}
 			}
 		} else {
@@ -258,13 +262,13 @@ class Events extends Admin
 	}
 	
 	/**
-	* delete Eventss
+	* delete Events Ongoings
 	*
 	* @var $id String
 	*/
 	public function delete($id = null)
 	{
-		$this->is_allowed('events_delete');
+		$this->is_allowed('events_ongoing_delete');
 
 		$this->load->helper('file');
 
@@ -280,40 +284,40 @@ class Events extends Admin
 		}
 
 		if ($remove) {
-            set_message(cclang('has_been_deleted', 'events'), 'success');
+            set_message(cclang('has_been_deleted', 'events_ongoing'), 'success');
         } else {
-            set_message(cclang('error_delete', 'events'), 'error');
+            set_message(cclang('error_delete', 'events_ongoing'), 'error');
         }
 
 		redirect_back();
 	}
 
 		/**
-	* View view Eventss
+	* View view Events Ongoings
 	*
 	* @var $id String
 	*/
 	public function view($id)
 	{
-		$this->is_allowed('events_view');
+		$this->is_allowed('events_ongoing_view');
 
-		$this->data['events'] = $this->model_events->join_avaiable()->select_string()->find($id);
+		$this->data['events_ongoing'] = $this->model_events_ongoing->join_avaiable()->select_string()->find($id);
 
-		$this->template->title('Events Detail');
-		$this->render('backend/standart/administrator/events/events_view', $this->data);
+		$this->template->title('Events Ongoing Detail');
+		$this->render('backend/standart/administrator/events_ongoing/events_ongoing_view', $this->data);
 	}
 	
 	/**
-	* delete Eventss
+	* delete Events Ongoings
 	*
 	* @var $id String
 	*/
 	private function _remove($id)
 	{
-		$events = $this->model_events->find($id);
+		$events_ongoing = $this->model_events_ongoing->find($id);
 
-		if (!empty($events->event_image)) {
-			$path = FCPATH . '/uploads/events/' . $events->event_image;
+		if (!empty($events_ongoing->event_image)) {
+			$path = FCPATH . '/uploads/events_ongoing/' . $events_ongoing->event_image;
 
 			if (is_file($path)) {
 				$delete_file = unlink($path);
@@ -321,16 +325,16 @@ class Events extends Admin
 		}
 		
 		
-		return $this->model_events->remove($id);
+		return $this->model_events_ongoing->remove($id);
 	}
 	
 	/**
-	* Upload Image Events	* 
+	* Upload Image Events Ongoing	* 
 	* @return JSON
 	*/
 	public function upload_event_image_file()
 	{
-		if (!$this->is_allowed('events_add', false)) {
+		if (!$this->is_allowed('events_ongoing_add', false)) {
 			echo json_encode([
 				'success' => false,
 				'message' => cclang('sorry_you_do_not_have_permission_to_access')
@@ -342,17 +346,17 @@ class Events extends Admin
 
 		echo $this->upload_file([
 			'uuid' 		 	=> $uuid,
-			'table_name' 	=> 'events',
+			'table_name' 	=> 'events_ongoing',
 		]);
 	}
 
 	/**
-	* Delete Image Events	* 
+	* Delete Image Events Ongoing	* 
 	* @return JSON
 	*/
 	public function delete_event_image_file($uuid)
 	{
-		if (!$this->is_allowed('events_delete', false)) {
+		if (!$this->is_allowed('events_ongoing_delete', false)) {
 			echo json_encode([
 				'success' => false,
 				'error' => cclang('sorry_you_do_not_have_permission_to_access')
@@ -365,19 +369,19 @@ class Events extends Admin
             'delete_by'         => $this->input->get('by'), 
             'field_name'        => 'event_image', 
             'upload_path_tmp'   => './uploads/tmp/',
-            'table_name'        => 'events',
-            'primary_key'       => 'id',
-            'upload_path'       => 'uploads/events/'
+            'table_name'        => 'events_ongoing',
+            'primary_key'       => '',
+            'upload_path'       => 'uploads/events_ongoing/'
         ]);
 	}
 
 	/**
-	* Get Image Events	* 
+	* Get Image Events Ongoing	* 
 	* @return JSON
 	*/
 	public function get_event_image_file($id)
 	{
-		if (!$this->is_allowed('events_update', false)) {
+		if (!$this->is_allowed('events_ongoing_update', false)) {
 			echo json_encode([
 				'success' => false,
 				'message' => 'Image not loaded, you do not have permission to access'
@@ -385,16 +389,16 @@ class Events extends Admin
 			exit;
 		}
 
-		$events = $this->model_events->find($id);
+		$events_ongoing = $this->model_events_ongoing->find($id);
 
 		echo $this->get_file([
             'uuid'              => $id, 
             'delete_by'         => 'id', 
             'field_name'        => 'event_image', 
-            'table_name'        => 'events',
-            'primary_key'       => 'id',
-            'upload_path'       => 'uploads/events/',
-            'delete_endpoint'   => 'administrator/events/delete_event_image_file'
+            'table_name'        => 'events_ongoing',
+            'primary_key'       => '',
+            'upload_path'       => 'uploads/events_ongoing/',
+            'delete_endpoint'   => 'administrator/events_ongoing/delete_event_image_file'
         ]);
 	}
 	
@@ -406,9 +410,9 @@ class Events extends Admin
 	*/
 	public function export()
 	{
-		$this->is_allowed('events_export');
+		$this->is_allowed('events_ongoing_export');
 
-		$this->model_events->export('events', 'events');
+		$this->model_events_ongoing->export('events_ongoing', 'events_ongoing');
 	}
 
 	/**
@@ -418,12 +422,12 @@ class Events extends Admin
 	*/
 	public function export_pdf()
 	{
-		$this->is_allowed('events_export');
+		$this->is_allowed('events_ongoing_export');
 
-		$this->model_events->pdf('events', 'events');
+		$this->model_events_ongoing->pdf('events_ongoing', 'events_ongoing');
 	}
 }
 
 
-/* End of file events.php */
-/* Location: ./application/controllers/administrator/Events.php */
+/* End of file events_ongoing.php */
+/* Location: ./application/controllers/administrator/Events Ongoing.php */

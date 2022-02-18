@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Model_events extends MY_Model {
+class Model_events_past extends MY_Model {
 
-		private $primary_key 	= 'id';
-		private $table_name 	= 'events';
-	private $field_search 	= ['event_name', 'event_type', 'event_location', 'check_in_date', 'check_out_date', 'event_image'];
+				private $primary_key    = NULL;
+		private $table_name 	= 'events_past';
+	private $field_search 	= ['id', 'event_name', 'event_type', 'event_location', 'check_in_date', 'check_out_date', 'event_image'];
 	private $user_restriction = '';
-	private $field_search_type = array("event_name" => "input","event_type" => "input","event_location" => "input","check_in_date" => "timestamp","check_out_date" => "timestamp","event_image" => "file");
+	private $field_search_type = array("id" => "number","event_name" => "input","event_type" => "input","event_location" => "input","check_in_date" => "timestamp","check_out_date" => "timestamp","event_image" => "file");
 	private $export_select_string = '';
 
 	public function __construct()
@@ -27,14 +27,15 @@ class Model_events extends MY_Model {
 
 		public function select_string() {
 			$select_string = '';
-						$select_string .= "events.*";
+						$select_string .= "events_past.*";
 			$this->db->select($select_string, FALSE);
 			return $this;
 		}
 
 		public function get_export_select_string() {
 			$select_string = '';
-                        			$select_string .= "event_name as `event_name`,";
+                        			$select_string .= "id as `id`,";
+						$select_string .= "event_name as `event_name`,";
 						$select_string .= "event_type as `event_type`,";
 						$select_string .= "event_location as `event_location`,";
 						$select_string .= "check_in_date as `check_in_date`,";
@@ -55,7 +56,7 @@ class Model_events extends MY_Model {
 
 
 		if (!empty($field)) {
-				$where .= "(" . "events.".$field . " LIKE '%" . $q . "%' )";
+				$where .= "(" . "events_past.".$field . " LIKE '%" . $q . "%' )";
 		}
 
 	        $search = $this->search_filter();
@@ -72,7 +73,7 @@ class Model_events extends MY_Model {
                                 $where .= " and ";
                         }
 
-                        $where .= " events.created_by = {$this->aauth->get_user_id()} ";
+                        $where .= " events_past.created_by = {$this->aauth->get_user_id()} ";
                 }
 
 
@@ -96,7 +97,7 @@ class Model_events extends MY_Model {
 		$field = $this->scurity($field);
 
 		if( !empty($field) ) {
-                                $where .= "(" . "events.".$field . " LIKE '%" . $q . "%' )";
+                                $where .= "(" . "events_past.".$field . " LIKE '%" . $q . "%' )";
                 }
 
                 $search = $this->search_filter();
@@ -114,7 +115,7 @@ class Model_events extends MY_Model {
                                 $where .= " and ";
                         }
 
-                        $where .= " events.created_by = {$this->aauth->get_user_id()} ";
+                        $where .= " events_past.created_by = {$this->aauth->get_user_id()} ";
 
                 }
 
@@ -129,8 +130,7 @@ class Model_events extends MY_Model {
 		}
 
 		$this->db->limit($limit, $offset);
-					$this->db->order_by('events.'.$this->primary_key, "DESC");
-							$query = $this->db->get($this->table_name);
+						$query = $this->db->get($this->table_name);
 
 			return $query->result();
 	}
@@ -142,5 +142,5 @@ class Model_events extends MY_Model {
 
 }
 
-/* End of file Model_events.php */
-/* Location: ./application/models/Model_events.php */
+/* End of file Model_events_past.php */
+/* Location: ./application/models/Model_events_past.php */

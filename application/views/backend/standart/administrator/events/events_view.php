@@ -89,24 +89,6 @@ function goBack() {
                     </div>
                                          
                     <div class="form-group ">
-                        <label for="content" class="col-sm-2"> Event Image </label>
-                        <div class="col-sm-8">
-                             <?php if (is_image($events->event_image)): ?>
-                              <a class="fancybox" rel="group" href="<?= BASE_URL . 'uploads/events/' . $events->event_image; ?>">
-                                <img src="<?= BASE_URL . 'uploads/events/' . $events->event_image; ?>" class="image-responsive" alt="image events" title="event_image events" width="40px">
-                              </a>
-                              <?php else: ?>
-                              <label>
-                                <a href="<?= BASE_URL . 'administrator/file/download/events/' . $events->event_image; ?>">
-                                 <img src="<?= get_icon_file($events->event_image); ?>" class="image-responsive" alt="image events" title="event_image <?= $events->event_image; ?>" width="40px"> 
-                               <?= $events->event_image ?>
-                               </a>
-                               </label>
-                              <?php endif; ?>
-                        </div>
-                    </div>
-                                       
-                    <div class="form-group ">
                         <label for="content" class="col-sm-2">Event Name </label>
 
                         <div class="col-sm-8">
@@ -145,7 +127,25 @@ function goBack() {
                            <?= _ent($events->check_out_date); ?>
                         </div>
                     </div>
-                                        
+                                         
+                    <div class="form-group ">
+                        <label for="content" class="col-sm-2"> Event Image </label>
+                        <div class="col-sm-8">
+                             <?php if (is_image($events->event_image)): ?>
+                              <a class="fancybox" rel="group" href="<?= BASE_URL . 'uploads/events/' . $events->event_image; ?>">
+                                <img src="<?= BASE_URL . 'uploads/events/' . $events->event_image; ?>" class="image-responsive" alt="image events" title="event_image events" width="40px">
+                              </a>
+                              <?php else: ?>
+                              <label>
+                                <a href="<?= BASE_URL . 'administrator/file/download/events/' . $events->event_image; ?>">
+                                 <img src="<?= get_icon_file($events->event_image); ?>" class="image-responsive" alt="image events" title="event_image <?= $events->event_image; ?>" width="40px"> 
+                               <?= $events->event_image ?>
+                               </a>
+                               </label>
+                              <?php endif; ?>
+                        </div>
+                    </div>
+                                      
                     <br>
                     <br>
 

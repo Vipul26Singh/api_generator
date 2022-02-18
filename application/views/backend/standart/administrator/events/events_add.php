@@ -96,19 +96,6 @@ function goBack() {
                             ]); ?>
                          
                                                 <div class="form-group ">
-                            <label for="event_image" class="col-sm-2 control-label">Event Image 
-                            <i class="required">*</i>
-                            </label>
-                            <div class="col-sm-8">
-                                <div id="events_event_image_galery"></div>
-                                <input class="data_file" name="events_event_image_uuid" id="events_event_image_uuid" type="hidden" value="<?= set_value('events_event_image_uuid'); ?>">
-                                <input class="data_file" name="events_event_image_name" id="events_event_image_name" type="hidden" value="<?= set_value('events_event_image_name'); ?>">
-                                <small class="info help-block">
-                                <b>Input Event Image</b> Max Length : 4096.</small>
-                            </div>
-                        </div>
-                                                 
-                                                <div class="form-group ">
                             <label for="event_name" class="col-sm-2 control-label">Event Name 
                             <i class="required">*</i>
                             </label>
@@ -132,6 +119,7 @@ function goBack() {
                                                  
                                                 <div class="form-group ">
                             <label for="event_location" class="col-sm-2 control-label">Event Location 
+                            <i class="required">*</i>
                             </label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control" name="event_location" id="event_location" placeholder="Event Location" value="<?= set_value('event_location'); ?>">
@@ -141,7 +129,20 @@ function goBack() {
                         </div>
                                                  
                          
-                        
+                         
+                                                <div class="form-group ">
+                            <label for="event_image" class="col-sm-2 control-label">Event Image 
+                            <i class="required">*</i>
+                            </label>
+                            <div class="col-sm-8">
+                                <div id="events_event_image_galery"></div>
+                                <input class="data_file" name="events_event_image_uuid" id="events_event_image_uuid" type="hidden" value="<?= set_value('events_event_image_uuid'); ?>">
+                                <input class="data_file" name="events_event_image_name" id="events_event_image_name" type="hidden" value="<?= set_value('events_event_image_name'); ?>">
+                                <small class="info help-block">
+                                <b>Input Event Image</b> Max Length : 4096.</small>
+                            </div>
+                        </div>
+                                                
                         <div class="message"></div>
                         <div class="row-fluid col-md-7">
                            <button class="btn btn-flat btn-primary btn_save btn_action" id="btn_save" data-stype='stay' title="<?= cclang('save_button'); ?> (Ctrl+s)">

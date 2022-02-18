@@ -12,10 +12,6 @@
 function domo(){
  
 	// Binding keys
-   $('*').bind('keydown', 'Ctrl+a', function assets() {
-       window.location.href = BASE_URL + '/administrator/Events/add';
-       return false;
-   });
 
    $('*').bind('keydown', 'Ctrl+f', function assets() {
        $('#sbtn').trigger('click');
@@ -44,11 +40,11 @@ function goBack() {
 <!-- Content Header (Page header) -->
 <section class="content-header">
    <h1>
-      Events<small><?= cclang('list_all'); ?></small>
+      Events Future<small><?= cclang('list_all'); ?></small>
    </h1>
    <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-      <li class="active">Events</li>
+      <li class="active">Events Future</li>
    </ol>
 </section>
 <!-- Main content -->
@@ -63,10 +59,7 @@ function goBack() {
                   <!-- Add the bg color to the header using any of the bg-* classes -->
                   <div class="widget-user-header ">
 		     <div class="row pull-right">
-			                        <?php is_allowed('events_add', function(){?>
-                        <a class="btn btn-flat btn-success btn_add_new" id="btn_add_new" title="<?= cclang('add_new_button', ['Events']); ?>  (Ctrl+a)" href="<?=  site_url('administrator/events/add'); ?>"><i class="fa fa-plus-square-o" ></i> <?= cclang('add_button'); ?></a>
-                        <?php }) ?>
-									<?php 
+						<?php 
 				$get_params = '';
 				foreach ($_GET as $name => $value) {
    	 				$get_params .= $name . '=' . $value . '&amp;';
@@ -76,19 +69,19 @@ function goBack() {
 					$get_params = rtrim($get_params, "&amp;");
 				}
 			?>
-						 <?php is_allowed('events_export', function() use ($get_params) {?>
-                        <a class="btn btn-flat btn-success" title="<?= cclang('export'); ?> Events" href="<?= site_url('administrator/events/export?'.$get_params); ?>"><i class="fa fa-file-excel-o" ></i> <?= cclang('export'); ?> XLS</a>
+						 <?php is_allowed('events_future_export', function() use ($get_params) {?>
+                        <a class="btn btn-flat btn-success" title="<?= cclang('export'); ?> Events Future" href="<?= site_url('administrator/events_future/export?'.$get_params); ?>"><i class="fa fa-file-excel-o" ></i> <?= cclang('export'); ?> XLS</a>
                         <?php }) ?>
-                        <?php is_allowed('events_export', function() use ($get_params) {?>
-                        <a class="btn btn-flat btn-success" title="<?= cclang('export'); ?> pdf Events" href="<?= site_url('administrator/events/export_pdf?'.$get_params); ?>"><i class="fa fa-file-pdf-o" ></i> <?= cclang('export'); ?> PDF</a>
+                        <?php is_allowed('events_future_export', function() use ($get_params) {?>
+                        <a class="btn btn-flat btn-success" title="<?= cclang('export'); ?> pdf Events Future" href="<?= site_url('administrator/events_future/export_pdf?'.$get_params); ?>"><i class="fa fa-file-pdf-o" ></i> <?= cclang('export'); ?> PDF</a>
 			<?php }) ?>
 			                     </div>
                      <div class="widget-user-image">
                         <img class="img-circle" src="<?= BASE_ASSET; ?>/img/list.png" alt="User Avatar">
                      </div>
                      <!-- /.widget-user-image -->
-                     <h3 class="widget-user-username">Events</h3>
-                     <h5 class="widget-user-desc"><?= cclang('list_all', ['Events']); ?>  <i class="label bg-yellow"><?= $events_counts; ?>  <?= cclang('items'); ?></i></h5>
+                     <h3 class="widget-user-username">Events Future</h3>
+                     <h5 class="widget-user-desc"><?= cclang('list_all', ['Events Future']); ?>  <i class="label bg-yellow"><?= $events_future_counts; ?>  <?= cclang('items'); ?></i></h5>
                   </div>
 
 		<div class="widget-user-header " >
@@ -97,9 +90,18 @@ function goBack() {
 		</div>
 
 		<div class="widget-user-header " id="advance_form_filter" style="display: none;">
-			<form name="form_filter_events" id="form_filter_events" action="<?= base_url('administrator/events/index'); ?>" method="get">
+			<form name="form_filter_events_future" id="form_filter_events_future" action="<?= base_url('administrator/events_future/index'); ?>" method="get">
 				<div class="col-sm-12">
-																					<div class="col-sm-6">
+												<div class="col-sm-6">
+                                                                        <div class="form-group ">
+                                                                        <label class="col-sm-4 control-label">Id</label>
+                                                                        <div class="col-sm-8">
+                                                                        <input type="number" class="form-control" name="id" value="<?= !empty($_GET['id']) ? $_GET['id']:' ' ?>"></input>
+                                                                        </div>
+                                                                        </div>
+                                                                        </div>
+
+																													<div class="col-sm-6">
                                                 			<div class="form-group ">
 									<label class="col-sm-4 control-label">Event Name</label>
                                                         		<div class="col-sm-8">
@@ -133,7 +135,7 @@ function goBack() {
                                 	</div>
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
-						<a class="btn btn-danger btn-block btn-md btn-raised pull-right" value="Reset" href="<?= base_url('administrator/events');?>" title="<?= cclang('reset_filter'); ?>">
+						<a class="btn btn-danger btn-block btn-md btn-raised pull-right" value="Reset" href="<?= base_url('administrator/events_future');?>" title="<?= cclang('reset_filter'); ?>">
                         				<i class="fa fa-undo"></i> Reset Filter 
                         			</a>
 					</div>
@@ -154,69 +156,53 @@ function goBack() {
                         </div>
 
 
-                  <form name="form_events" id="form_events" action="<?= base_url('administrator/events/index'); ?>">
+                  <form name="form_events_future" id="form_events_future" action="<?= base_url('administrator/events_future/index'); ?>">
                   
 
                   <div class="table-responsive"> 
                   <table class="table table-bordered table-striped dataTable">
                      <thead>
 			<tr class="">
-				                           <th>
-                            <input type="checkbox" class="flat-red toltip" id="check_all" name="check_all" title="check all">
-			   </th>
-				                           <th>Event Name</th>
+				                           <th>Id</th>
+			   <th>Event Name</th>
 			   <th>Event Type</th>
 			   <th>Event Location</th>
 			   <th>Check In Date</th>
 			   <th>Check Out Date</th>
 			   <th>Event Image</th>
-			   								<th>Action</th>
-				                        </tr>
+			   				                        </tr>
                      </thead>
-                     <tbody id="tbody_events">
-                     <?php foreach($eventss as $events): ?>
+                     <tbody id="tbody_events_future">
+                     <?php foreach($events_futures as $events_future): ?>
 			<tr>
 
-				                           <td width="5">
-                              <input type="checkbox" class="flat-red check" name="id[]" value="<?= $events->id; ?>">
-			   </td>
 				                           
-                           <td><?= _ent($events->event_name); ?></td> 
-                           <td><?= _ent($events->event_type); ?></td> 
-                           <td><?= _ent($events->event_location); ?></td> 
-                           <td><?= _ent($events->check_in_date); ?></td> 
-                           <td><?= _ent($events->check_out_date); ?></td> 
+                           <td><?= _ent($events_future->id); ?></td> 
+                           <td><?= _ent($events_future->event_name); ?></td> 
+                           <td><?= _ent($events_future->event_type); ?></td> 
+                           <td><?= _ent($events_future->event_location); ?></td> 
+                           <td><?= _ent($events_future->check_in_date); ?></td> 
+                           <td><?= _ent($events_future->check_out_date); ?></td> 
                            <td>
-                              <?php if (!empty($events->event_image)): ?>
-                                <?php if (is_image($events->event_image)): ?>
-                                <a class="fancybox" rel="group" href="<?= BASE_URL . 'uploads/events/' . $events->event_image; ?>">
-                                  <img src="<?= BASE_URL . 'uploads/events/' . $events->event_image; ?>" class="image-responsive" alt="image events" title="event_image events" width="40px">
+                              <?php if (!empty($events_future->event_image)): ?>
+                                <?php if (is_image($events_future->event_image)): ?>
+                                <a class="fancybox" rel="group" href="<?= BASE_URL . 'uploads/events_future/' . $events_future->event_image; ?>">
+                                  <img src="<?= BASE_URL . 'uploads/events_future/' . $events_future->event_image; ?>" class="image-responsive" alt="image events_future" title="event_image events_future" width="40px">
                                 </a>
                                 <?php else: ?>
-                                  <a href="<?= BASE_URL . 'administrator/file/download/events/' . $events->event_image; ?>">
-                                   <img src="<?= get_icon_file($events->event_image); ?>" class="image-responsive image-icon" alt="image events" title="event_image <?= $events->event_image; ?>" width="40px"> 
+                                  <a href="<?= BASE_URL . 'administrator/file/download/events_future/' . $events_future->event_image; ?>">
+                                   <img src="<?= get_icon_file($events_future->event_image); ?>" class="image-responsive image-icon" alt="image events_future" title="event_image <?= $events_future->event_image; ?>" width="40px"> 
                                  </a>
                                 <?php endif; ?>
                               <?php endif; ?>
                            </td>
                             
-                           						<td width="200">
-                              <?php is_allowed('events_view', function() use ($events){?>
-                              <a href="<?= site_url('administrator/events/view/' . $events->id); ?>" class="label-default"><i class="fa fa-newspaper-o"></i> <?= cclang('view_button'); ?>
-                              <?php }) ?>
-                              <?php is_allowed('events_update', function() use ($events){?>
-                              <a href="<?= site_url('administrator/events/edit/' . $events->id); ?>" class="label-default"><i class="fa fa-edit "></i> <?= cclang('update_button'); ?></a>
-                              <?php }) ?>
-                              <?php is_allowed('events_delete', function() use ($events){?>
-                              <a href="javascript:void(0);" data-href="<?= site_url('administrator/events/delete/' . $events->id); ?>" class="label-default remove-data"><i class="fa fa-close"></i> <?= cclang('remove_button'); ?></a>
-                               <?php }) ?>
-			   </td>
-				                        </tr>
+                           			                        </tr>
                       <?php endforeach; ?>
-                      <?php if ($events_counts == 0) :?>
+                      <?php if ($events_future_counts == 0) :?>
                          <tr>
                            <td colspan="100">
-                           Events data is not available
+                           Events Future data is not available
                            </td>
                          </tr>
                       <?php endif; ?>
@@ -228,15 +214,6 @@ function goBack() {
                <!-- /.widget-user -->
                <div class="row">
 		  <div class="col-md-8">
-					     <div class="col-sm-2 padd-left-0 " >
-                        <select type="text" class="form-control chosen chosen-select" name="bulk" id="bulk" placeholder="Site Email" >
-                           <option value="">Bulk</option>
-                           <option value="delete">Delete</option>
-			</select>
-                     </div>
-                     <div class="col-sm-2 padd-left-0 ">
-                        <button type="button" class="form-group btn btn-sm btn-success btn-raised" name="apply" id="apply" title="<?= cclang('apply_bulk_action'); ?>"><?= cclang('apply_button'); ?></button>
-		     </div>
 			                  </div>
                   </form>                  <div class="col-md-4">
                      <div class="dataTables_paginate paging_simple_numbers pull-right" id="example2_paginate" >
@@ -291,7 +268,7 @@ function goBack() {
 	$('#sbtn').click(function(){
                 var q = $('#filter').val();
                 var f = $('#field').val();
-                window.location.replace(BASE_URL + '/administrator/events/index?q=' + q + '&f=' + f);
+                window.location.replace(BASE_URL + '/administrator/events_future/index?q=' + q + '&f=' + f);
                 return false; 
         });
 
@@ -299,7 +276,7 @@ function goBack() {
     $('#apply').click(function(){
 
       var bulk = $('#bulk');
-      var serialize_bulk = $('#form_events').serialize();
+      var serialize_bulk = $('#form_events_future').serialize();
 
       if (bulk.val() == 'delete') {
          swal({
@@ -315,7 +292,7 @@ function goBack() {
           },
           function(isConfirm){
             if (isConfirm) {
-               document.location.href = BASE_URL + '/administrator/events/delete?' + serialize_bulk;      
+               document.location.href = BASE_URL + '/administrator/events_future/delete?' + serialize_bulk;      
             }
           });
 
