@@ -6,10 +6,12 @@ Storing them here means regenerating the service preserves all
 custom transformation logic without manual merging.
 
 Hook types:
+    before_fetch_all — runs before repository.findAll()
+    after_fetch_all  — runs after  repository.findAll()
+    before_fetch     — runs before repository.findById()
+    after_fetch      — runs after  repository.findById()
     before_save      — runs before repository.save() on create OR update
     after_save       — runs after  repository.save()
-    after_fetch      — runs after  repository.findById()
-    after_fetch_all  — runs after  repository.findAll()
     before_delete    — runs before repository.deleteById()
     after_delete     — runs after  repository.deleteById()
 """
@@ -22,10 +24,12 @@ from typing import Optional
 DEFAULT_DB_PATH = Path.home() / ".msgen" / "hooks.db"
 
 VALID_HOOK_TYPES = {
+    "before_fetch_all",
+    "after_fetch_all",
+    "before_fetch",
+    "after_fetch",
     "before_save",
     "after_save",
-    "after_fetch",
-    "after_fetch_all",
     "before_delete",
     "after_delete",
 }

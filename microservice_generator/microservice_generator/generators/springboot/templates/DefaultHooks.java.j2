@@ -44,11 +44,9 @@ public class Default{{ class_name }}Hooks implements {{ class_name }}Hooks {
 
     /** {@inheritDoc} */
     @Override
-    public {{ class_name }} afterFetch({{ class_name }} entity) {
-{% if hooks.after_fetch %}
-        {{ hooks.after_fetch | indent(8) }}
-{% else %}
-        return entity;
+    public void beforeFetchAll() {
+{% if hooks.before_fetch_all %}
+        {{ hooks.before_fetch_all | indent(8) }}
 {% endif %}
     }
 
@@ -59,6 +57,24 @@ public class Default{{ class_name }}Hooks implements {{ class_name }}Hooks {
         {{ hooks.after_fetch_all | indent(8) }}
 {% else %}
         return entities;
+{% endif %}
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void beforeFetch({{ pk_java_type }} id) {
+{% if hooks.before_fetch %}
+        {{ hooks.before_fetch | indent(8) }}
+{% endif %}
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public {{ class_name }} afterFetch({{ class_name }} entity) {
+{% if hooks.after_fetch %}
+        {{ hooks.after_fetch | indent(8) }}
+{% else %}
+        return entity;
 {% endif %}
     }
 

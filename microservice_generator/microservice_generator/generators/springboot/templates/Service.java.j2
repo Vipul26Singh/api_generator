@@ -29,23 +29,27 @@ public class {{ class_name }}Service {
     private final {{ class_name }}Hooks hooks;
 
     /**
-     * Returns all {@link {{ class_name }}} records, passed through
-     * {@link {{ class_name }}Hooks#afterFetchAll}.
+     * Returns all {@link {{ class_name }}} records.
+     * Calls {@link {{ class_name }}Hooks#beforeFetchAll} before querying and
+     * {@link {{ class_name }}Hooks#afterFetchAll} on the result.
      *
      * @return list of entities (never {@code null})
      */
     public List<{{ class_name }}> findAll() {
+        hooks.beforeFetchAll();
         return hooks.afterFetchAll(repository.findAll());
     }
 
     /**
-     * Finds a {@link {{ class_name }}} by its primary key, passed through
-     * {@link {{ class_name }}Hooks#afterFetch} if present.
+     * Finds a {@link {{ class_name }}} by its primary key.
+     * Calls {@link {{ class_name }}Hooks#beforeFetch} before querying and
+     * {@link {{ class_name }}Hooks#afterFetch} on the result if present.
      *
      * @param id the primary key
      * @return an {@link Optional} containing the entity, or empty if not found
      */
     public Optional<{{ class_name }}> findById({{ pk_java_type }} id) {
+        hooks.beforeFetch(id);
         return repository.findById(id).map(hooks::afterFetch);
     }
 

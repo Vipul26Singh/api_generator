@@ -117,10 +117,12 @@ def hooks():
 
     \b
     Available hook types:
+        before_fetch_all — before repository.findAll()
+        after_fetch_all  — after  repository.findAll()
+        before_fetch     — before repository.findById()
+        after_fetch      — after  repository.findById()
         before_save      — before repository.save()
         after_save       — after  repository.save()
-        after_fetch      — after  repository.findById()
-        after_fetch_all  — after  repository.findAll()
         before_delete    — before repository.deleteById()
         after_delete     — after  repository.deleteById()
     """

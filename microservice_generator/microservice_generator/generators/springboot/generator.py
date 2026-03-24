@@ -135,8 +135,10 @@ class SpringBootGenerator(BaseGenerator):
         # Load any stored hooks from the DB for this entity
         stored_hooks = self._hooks_store.get_for_entity(svc_name, class_name)
         hooks_ctx = {k: stored_hooks.get(k) for k in (
-            "before_save", "after_save", "after_fetch",
-            "after_fetch_all", "before_delete", "after_delete",
+            "before_fetch_all", "after_fetch_all",
+            "before_fetch", "after_fetch",
+            "before_save", "after_save",
+            "before_delete", "after_delete",
         )}
 
         self._write(java_src / "entity" / f"{class_name}.java",

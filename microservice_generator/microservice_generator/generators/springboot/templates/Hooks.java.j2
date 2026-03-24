@@ -50,14 +50,13 @@ public interface {{ class_name }}Hooks {
     }
 
     /**
-     * Called after a single {@code {{ class_name }}} is fetched by its primary key.
+     * Called before {@code repository.findAll()} is executed.
      *
-     * @param entity the fetched entity
-     * @return the (potentially transformed) entity; must not be {@code null}
+     * <p>Useful for logging, auditing, or short-circuit caching.
+     * Does not influence the query itself — use a custom repository
+     * method for that.</p>
      */
-    default {{ class_name }} afterFetch({{ class_name }} entity) {
-        return entity;
-    }
+    default void beforeFetchAll() {}
 
     /**
      * Called after all {@code {{ class_name }}} records are fetched.
@@ -67,6 +66,26 @@ public interface {{ class_name }}Hooks {
      */
     default List<{{ class_name }}> afterFetchAll(List<{{ class_name }}> entities) {
         return entities;
+    }
+
+    /**
+     * Called before a single {@code {{ class_name }}} is fetched by its primary key.
+     *
+     * <p>Useful for logging, auditing, or authorization checks before
+     * the record is loaded from the database.</p>
+     *
+     * @param id the primary key about to be looked up
+     */
+    default void beforeFetch({{ pk_java_type }} id) {}
+
+    /**
+     * Called after a single {@code {{ class_name }}} is fetched by its primary key.
+     *
+     * @param entity the fetched entity
+     * @return the (potentially transformed) entity; must not be {@code null}
+     */
+    default {{ class_name }} afterFetch({{ class_name }} entity) {
+        return entity;
     }
 
     /**
