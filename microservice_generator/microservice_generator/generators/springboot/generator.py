@@ -1,8 +1,10 @@
 from pathlib import Path
+from typing import Optional
 
 from ..base import BaseGenerator
 from ...config.loader import GeneratorConfig, ServiceConfig
 from ...parser.models import SchemaModel, TableModel, ColumnModel
+from ...hooks.store import HooksStore, DEFAULT_DB_PATH
 from ...utils.naming import (
     to_pascal_case,
     to_camel_case,
@@ -17,6 +19,10 @@ from .type_mapper import map_column, collect_imports, JavaTypeInfo
 
 
 class SpringBootGenerator(BaseGenerator):
+
+    def __init__(self, *args, hooks_db: Optional[Path] = None, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self._hooks_store = HooksStore(hooks_db or DEFAULT_DB_PATH)
 
     @property
     def template_dir(self) -> Path:
@@ -93,12 +99,13 @@ class SpringBootGenerator(BaseGenerator):
                 print(f"  [WARN] Table '{table_name}' not found in schema — skipping")
                 continue
             self._generate_table_artifacts(
-                table, package, java_src, tables_in_service
+                table, svc.name, package, java_src, tables_in_service
             )
 
     def _generate_table_artifacts(
         self,
         table: TableModel,
+        svc_name: str,
         package: str,
         java_src: Path,
         tables_in_service: set[str],
@@ -125,6 +132,13 @@ class SpringBootGenerator(BaseGenerator):
             "imports": extra_imports,
         }
 
+        # Load any stored hooks from the DB for this entity
+        stored_hooks = self._hooks_store.get_for_entity(svc_name, class_name)
+        hooks_ctx = {k: stored_hooks.get(k) for k in (
+            "before_save", "after_save", "after_fetch",
+            "after_fetch_all", "before_delete", "after_delete",
+        )}
+
         self._write(java_src / "entity" / f"{class_name}.java",
                     self._render("Entity.java.j2", ctx))
         self._write(java_src / "repository" / f"{class_name}Repository.java",
@@ -133,6 +147,10 @@ class SpringBootGenerator(BaseGenerator):
                     self._render("Service.java.j2", ctx))
         self._write(java_src / "controller" / f"{class_name}Controller.java",
                     self._render("Controller.java.j2", ctx))
+        self._write(java_src / "hooks" / f"{class_name}Hooks.java",
+                    self._render("Hooks.java.j2", ctx))
+        self._write(java_src / "hooks" / f"Default{class_name}Hooks.java",
+                    self._render("DefaultHooks.java.j2", {**ctx, "hooks": hooks_ctx}))
 
     # ── Column context builder ────────────────────────────────────────────
 

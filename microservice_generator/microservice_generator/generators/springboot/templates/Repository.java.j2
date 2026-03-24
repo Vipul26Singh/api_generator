@@ -4,6 +4,13 @@ import {{ package }}.entity.{{ class_name }};
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Spring Data JPA repository for {@link {{ class_name }}}.
+ *
+ * <p>Provides standard CRUD operations via {@link JpaRepository}.
+ * Add custom query methods here when the generated service layer
+ * does not cover a specific use case.</p>
+ */
 @Repository
 public interface {{ class_name }}Repository extends JpaRepository<{{ class_name }}, {{ pk_java_type }}> {
 }

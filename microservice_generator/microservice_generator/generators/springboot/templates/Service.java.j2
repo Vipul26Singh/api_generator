@@ -1,6 +1,7 @@
 package {{ package }}.service;
 
 import {{ package }}.entity.{{ class_name }};
+import {{ package }}.hooks.{{ class_name }}Hooks;
 import {{ package }}.repository.{{ class_name }}Repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,25 +9,68 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service layer for {@link {{ class_name }}} operations.
+ *
+ * <p>Each method calls the corresponding hook on {@link {{ class_name }}Hooks}
+ * before and/or after the repository operation. Override the default hooks bean
+ * to inject transformation logic without modifying this class.</p>
+ */
 @Service
 @RequiredArgsConstructor
 public class {{ class_name }}Service {
 
     private final {{ class_name }}Repository repository;
 
+    /**
+     * Injected hook implementation — defaults to {@code Default{{ class_name }}Hooks}
+     * unless a custom bean is present in the application context.
+     */
+    private final {{ class_name }}Hooks hooks;
+
+    /**
+     * Returns all {@link {{ class_name }}} records, passed through
+     * {@link {{ class_name }}Hooks#afterFetchAll}.
+     *
+     * @return list of entities (never {@code null})
+     */
     public List<{{ class_name }}> findAll() {
-        return repository.findAll();
+        return hooks.afterFetchAll(repository.findAll());
     }
 
+    /**
+     * Finds a {@link {{ class_name }}} by its primary key, passed through
+     * {@link {{ class_name }}Hooks#afterFetch} if present.
+     *
+     * @param id the primary key
+     * @return an {@link Optional} containing the entity, or empty if not found
+     */
     public Optional<{{ class_name }}> findById({{ pk_java_type }} id) {
-        return repository.findById(id);
+        return repository.findById(id).map(hooks::afterFetch);
     }
 
+    /**
+     * Persists a {@link {{ class_name }}}, passing it through
+     * {@link {{ class_name }}Hooks#beforeSave} first and
+     * {@link {{ class_name }}Hooks#afterSave} after.
+     *
+     * @param entity the entity to save (create or update)
+     * @return the saved entity
+     */
     public {{ class_name }} save({{ class_name }} entity) {
-        return repository.save(entity);
+        return hooks.afterSave(repository.save(hooks.beforeSave(entity)));
     }
 
+    /**
+     * Deletes the {@link {{ class_name }}} with the given primary key.
+     * Calls {@link {{ class_name }}Hooks#beforeDelete} and
+     * {@link {{ class_name }}Hooks#afterDelete} around the deletion.
+     *
+     * @param id the primary key of the record to delete
+     */
     public void deleteById({{ pk_java_type }} id) {
+        hooks.beforeDelete(id);
         repository.deleteById(id);
+        hooks.afterDelete(id);
     }
 }

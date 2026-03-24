@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller for {@link {{ class_name }}} resources.
+ *
+ * <p>Exposes standard CRUD endpoints under {@code /api/{{ url_path }}}.
+ * Transformation logic belongs in {@code {{ class_name }}Hooks}, not here.</p>
+ */
 @RestController
 @RequestMapping("/api/{{ url_path }}")
 @RequiredArgsConstructor
@@ -16,11 +22,22 @@ public class {{ class_name }}Controller {
 
     private final {{ class_name }}Service service;
 
+    /**
+     * Returns all {{ class_name }} records.
+     *
+     * @return {@code 200 OK} with a list of entities
+     */
     @GetMapping
     public ResponseEntity<List<{{ class_name }}>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
+    /**
+     * Returns a single {{ class_name }} by primary key.
+     *
+     * @param id the primary key
+     * @return {@code 200 OK} with the entity, or {@code 404 Not Found}
+     */
     @GetMapping("/{id}")
     public ResponseEntity<{{ class_name }}> getById(@PathVariable {{ pk_java_type }} id) {
         return service.findById(id)
@@ -28,11 +45,24 @@ public class {{ class_name }}Controller {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Creates a new {{ class_name }} record.
+     *
+     * @param entity the entity to create
+     * @return {@code 201 Created} with the persisted entity
+     */
     @PostMapping
     public ResponseEntity<{{ class_name }}> create(@RequestBody {{ class_name }} entity) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(entity));
     }
 
+    /**
+     * Updates an existing {{ class_name }} record.
+     *
+     * @param id     the primary key of the record to update
+     * @param entity the updated entity data
+     * @return {@code 200 OK} with the updated entity, or {@code 404 Not Found}
+     */
     @PutMapping("/{id}")
     public ResponseEntity<{{ class_name }}> update(
             @PathVariable {{ pk_java_type }} id,
@@ -45,6 +75,12 @@ public class {{ class_name }}Controller {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Deletes a {{ class_name }} record by primary key.
+     *
+     * @param id the primary key of the record to delete
+     * @return {@code 204 No Content}, or {@code 404 Not Found}
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable {{ pk_java_type }} id) {
         if (service.findById(id).isEmpty()) {

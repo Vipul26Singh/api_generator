@@ -15,6 +15,7 @@ import click
 from .config.loader import load_config, ConfigValidationError
 from .parser.ddl_parser import parse_ddl
 from .generators.registry import get_generator, list_generators
+from .hooks.store import HooksStore, VALID_HOOK_TYPES, DEFAULT_DB_PATH
 
 
 @click.group()
@@ -102,3 +103,90 @@ def list_gens():
     click.echo("Available generators:")
     for name in list_generators():
         click.echo(f"  - {name}")
+
+
+# ── Hooks command group ───────────────────────────────────────────────────────
+
+@main.group()
+def hooks():
+    """Manage pre/post hooks stored in the local hooks database.
+
+    Hooks are Java code snippets tied to a specific service + entity + lifecycle
+    point. They are woven into Default{Entity}Hooks.java on every generate run,
+    so custom transformation logic survives schema regeneration.
+
+    \b
+    Available hook types:
+        before_save      — before repository.save()
+        after_save       — after  repository.save()
+        after_fetch      — after  repository.findById()
+        after_fetch_all  — after  repository.findAll()
+        before_delete    — before repository.deleteById()
+        after_delete     — after  repository.deleteById()
+    """
+
+
+@hooks.command("register")
+@click.option("--service",  "-s", required=True, help="Service name (e.g. inventory-service)")
+@click.option("--entity",   "-e", required=True, help="Entity class name (e.g. Equipment)")
+@click.option("--hook-type","-t", required=True,
+              type=click.Choice(sorted(VALID_HOOK_TYPES)), help="Hook type")
+@click.option("--code",     "-c", required=True, help="Java code body for the hook method")
+@click.option("--db", default=None, type=click.Path(path_type=Path),
+              help=f"Path to hooks DB (default: {DEFAULT_DB_PATH})")
+def hooks_register(service, entity, hook_type, code, db):
+    """Register or update a hook body in the local database.
+
+    \b
+    Example:
+        msgen hooks register \\
+            --service inventory-service \\
+            --entity Equipment \\
+            --hook-type before_save \\
+            --code "entity.setName(entity.getName().trim()); return entity;"
+    """
+    store = HooksStore(db or DEFAULT_DB_PATH)
+    store.register(service, entity, hook_type, code)
+    click.secho(
+        f"Hook registered: {service} / {entity} / {hook_type}", fg="green"
+    )
+    click.echo("Re-run 'msgen generate' to weave it into the generated code.")
+
+
+@hooks.command("list")
+@click.option("--service", "-s", default=None, help="Filter by service name")
+@click.option("--entity",  "-e", default=None, help="Filter by entity name")
+@click.option("--db", default=None, type=click.Path(path_type=Path),
+              help=f"Path to hooks DB (default: {DEFAULT_DB_PATH})")
+def hooks_list(service, entity, db):
+    """List registered hooks."""
+    store = HooksStore(db or DEFAULT_DB_PATH)
+    records = store.list_hooks(service_name=service, entity_name=entity)
+    if not records:
+        click.echo("No hooks registered.")
+        return
+    for r in records:
+        click.echo(f"\n{'─'*60}")
+        click.echo(f"  Service : {r.service_name}")
+        click.echo(f"  Entity  : {r.entity_name}")
+        click.echo(f"  Type    : {r.hook_type}")
+        click.echo(f"  Updated : {r.updated_at}")
+        click.echo(f"  Code    :\n    {r.java_code}")
+    click.echo(f"\n{'─'*60}")
+    click.echo(f"Total: {len(records)} hook(s)")
+
+
+@hooks.command("remove")
+@click.option("--service",  "-s", required=True)
+@click.option("--entity",   "-e", required=True)
+@click.option("--hook-type","-t", required=True,
+              type=click.Choice(sorted(VALID_HOOK_TYPES)))
+@click.option("--db", default=None, type=click.Path(path_type=Path))
+def hooks_remove(service, entity, hook_type, db):
+    """Remove a registered hook."""
+    store = HooksStore(db or DEFAULT_DB_PATH)
+    deleted = store.remove(service, entity, hook_type)
+    if deleted:
+        click.secho(f"Removed: {service} / {entity} / {hook_type}", fg="yellow")
+    else:
+        click.secho("No matching hook found.", fg="red", err=True)
