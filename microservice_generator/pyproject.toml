@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "microservice-generator"
+version = "0.1.0"
+description = "Generate Spring Boot microservices from a SQL schema"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.1",
+    "pyyaml>=6.0",
+    "jinja2>=3.1",
+]
+
+[project.scripts]
+msgen = "microservice_generator.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["microservice_generator*"]
+
+[tool.setuptools.package-data]
+"microservice_generator.generators.springboot" = ["templates/*.j2"]

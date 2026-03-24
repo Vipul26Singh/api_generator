@@ -14,3 +14,5 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 application/logs/*
 !application/logs/index.html
 !application/logs/.htaccess
+microservice_generator/microservice_generator.egg-info/
+microservice_generator/**/__pycache__/

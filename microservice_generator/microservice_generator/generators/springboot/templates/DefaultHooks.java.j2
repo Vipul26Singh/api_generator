@@ -1,0 +1,96 @@
+package {{ package }}.hooks;
+
+import {{ package }}.entity.{{ class_name }};
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+/**
+ * Default no-op implementation of {@link {{ class_name }}Hooks}.
+ *
+ * <p>This bean is registered automatically unless a custom
+ * {@code {{ class_name }}Hooks} bean is present in the application context.
+ * To add transformation logic, create your own {@code @Component} that
+ * implements {@link {{ class_name }}Hooks} — this default will be skipped.</p>
+ *
+ * <p>Hook bodies below are managed by the microservice-generator.
+ * Re-running {@code msgen generate} will re-apply any hooks registered
+ * via {@code msgen hooks register} without overwriting custom beans.</p>
+ */
+@Component
+@ConditionalOnMissingBean({{ class_name }}Hooks.class)
+public class Default{{ class_name }}Hooks implements {{ class_name }}Hooks {
+
+    /** {@inheritDoc} */
+    @Override
+    public {{ class_name }} beforeSave({{ class_name }} entity) {
+{% if hooks.before_save %}
+        {{ hooks.before_save | indent(8) }}
+{% else %}
+        return entity;
+{% endif %}
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public {{ class_name }} afterSave({{ class_name }} entity) {
+{% if hooks.after_save %}
+        {{ hooks.after_save | indent(8) }}
+{% else %}
+        return entity;
+{% endif %}
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void beforeFetchAll() {
+{% if hooks.before_fetch_all %}
+        {{ hooks.before_fetch_all | indent(8) }}
+{% endif %}
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<{{ class_name }}> afterFetchAll(List<{{ class_name }}> entities) {
+{% if hooks.after_fetch_all %}
+        {{ hooks.after_fetch_all | indent(8) }}
+{% else %}
+        return entities;
+{% endif %}
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void beforeFetch({{ pk_java_type }} id) {
+{% if hooks.before_fetch %}
+        {{ hooks.before_fetch | indent(8) }}
+{% endif %}
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public {{ class_name }} afterFetch({{ class_name }} entity) {
+{% if hooks.after_fetch %}
+        {{ hooks.after_fetch | indent(8) }}
+{% else %}
+        return entity;
+{% endif %}
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void beforeDelete({{ pk_java_type }} id) {
+{% if hooks.before_delete %}
+        {{ hooks.before_delete | indent(8) }}
+{% endif %}
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void afterDelete({{ pk_java_type }} id) {
+{% if hooks.after_delete %}
+        {{ hooks.after_delete | indent(8) }}
+{% endif %}
+    }
+}

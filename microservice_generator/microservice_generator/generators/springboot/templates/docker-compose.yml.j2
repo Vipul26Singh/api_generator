@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+{% for svc in services %}
+  # ── {{ svc.name }} ────────────────────────────────────────
+  {{ svc.name }}:
+    build: ./{{ svc.name }}
+    ports:
+      - "{{ svc.port }}:{{ svc.port }}"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://{{ svc.name }}-db:{{ svc.database.port }}/{{ svc.database.name }}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: {{ svc.database.username }}
+      SPRING_DATASOURCE_PASSWORD: {{ svc.database.password }}
+    depends_on:
+      {{ svc.name }}-db:
+        condition: service_healthy
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  {{ svc.name }}-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: {{ svc.database.name }}
+      MYSQL_USER: {{ svc.database.username }}
+      MYSQL_PASSWORD: {{ svc.database.password }}
+    volumes:
+      - {{ svc.name | replace("-", "_") }}_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+{% endfor %}
+networks:
+  microservices-net:
+    driver: bridge
+
+volumes:
+{% for svc in services %}
+  {{ svc.name | replace("-", "_") }}_db_data:
+{% endfor %}

@@ -1,0 +1,47 @@
+# services.yml — define how tables are grouped into microservices
+
+global:
+  group_id: com.example
+  base_package: com.example
+  java_version: "17"
+  spring_boot_version: "3.2.0"
+
+services:
+
+  - name: inventory-service
+    port: 8081
+    tables:
+      - equipment_category
+      - equipments
+      - equipment_checkin
+    database:
+      host: inventory-db
+      port: 3306
+      name: inventory_db
+      username: inv_user
+      password: inv_pass
+
+  - name: event-service
+    port: 8082
+    tables:
+      - events
+      - event_equipment_checkout
+    database:
+      host: event-db
+      port: 3306
+      name: event_db
+      username: evt_user
+      password: evt_pass
+
+  - name: auth-service
+    port: 8083
+    tables:
+      - users
+      - user_groups
+      - user_group_members
+    database:
+      host: auth-db
+      port: 3306
+      name: auth_db
+      username: auth_user
+      password: auth_pass
