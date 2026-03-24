@@ -1,0 +1,32 @@
+package {{ package }}.service;
+
+import {{ package }}.entity.{{ class_name }};
+import {{ package }}.repository.{{ class_name }}Repository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class {{ class_name }}Service {
+
+    private final {{ class_name }}Repository repository;
+
+    public List<{{ class_name }}> findAll() {
+        return repository.findAll();
+    }
+
+    public Optional<{{ class_name }}> findById({{ pk_java_type }} id) {
+        return repository.findById(id);
+    }
+
+    public {{ class_name }} save({{ class_name }} entity) {
+        return repository.save(entity);
+    }
+
+    public void deleteById({{ pk_java_type }} id) {
+        repository.deleteById(id);
+    }
+}

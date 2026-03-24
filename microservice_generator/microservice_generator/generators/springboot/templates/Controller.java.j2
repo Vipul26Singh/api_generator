@@ -1,0 +1,56 @@
+package {{ package }}.controller;
+
+import {{ package }}.entity.{{ class_name }};
+import {{ package }}.service.{{ class_name }}Service;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/{{ url_path }}")
+@RequiredArgsConstructor
+public class {{ class_name }}Controller {
+
+    private final {{ class_name }}Service service;
+
+    @GetMapping
+    public ResponseEntity<List<{{ class_name }}>> getAll() {
+        return ResponseEntity.ok(service.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<{{ class_name }}> getById(@PathVariable {{ pk_java_type }} id) {
+        return service.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<{{ class_name }}> create(@RequestBody {{ class_name }} entity) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(entity));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<{{ class_name }}> update(
+            @PathVariable {{ pk_java_type }} id,
+            @RequestBody {{ class_name }} entity) {
+        return service.findById(id)
+                .map(existing -> {
+                    entity.set{{ pk_field_pascal }}(id);
+                    return ResponseEntity.ok(service.save(entity));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable {{ pk_java_type }} id) {
+        if (service.findById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        service.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+}

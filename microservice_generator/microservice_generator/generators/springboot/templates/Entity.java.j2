@@ -1,0 +1,34 @@
+package {{ package }}.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+{% for imp in imports %}
+import {{ imp }};
+{% endfor %}
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "{{ table_name }}")
+public class {{ class_name }} {
+
+{% for col in columns %}
+{% if col.is_pk %}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+{% endif %}
+{% if col.cross_service_fk_comment %}
+    {{ col.cross_service_fk_comment }}
+{% endif %}
+{% for ann in col.annotations %}
+    {{ ann }}
+{% endfor %}
+    private {{ col.java_type }} {{ col.field_name }};
+
+{% endfor %}
+}
