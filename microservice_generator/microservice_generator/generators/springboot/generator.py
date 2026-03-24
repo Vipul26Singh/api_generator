@@ -92,14 +92,32 @@ class SpringBootGenerator(BaseGenerator):
             }),
         )
 
-        # Per-table artifacts
+        # Precompute relationship metadata for the whole service before
+        # generating individual table artifacts (OneToMany / ManyToMany
+        # inverse sides require knowing all tables first).
+        service_tables = [
+            self.schema.tables[t] for t in svc.tables if t in self.schema.tables
+        ]
+        junction_tables, inverse_rels = self._build_service_relationships(
+            service_tables, tables_in_service
+        )
+
+        # Per-table artifacts (skip pure junction tables — managed by @JoinTable)
         for table_name in svc.tables:
             table = self.schema.tables.get(table_name)
             if table is None:
                 print(f"  [WARN] Table '{table_name}' not found in schema — skipping")
                 continue
+            if table_name in junction_tables:
+                print(f"  [INFO] '{table_name}' is a junction table — skipping (managed via @ManyToMany @JoinTable)")
+                continue
             self._generate_table_artifacts(
-                table, svc.name, package, java_src, tables_in_service
+                table,
+                svc.name,
+                package,
+                java_src,
+                tables_in_service,
+                inverse_rels.get(table_name, []),
             )
 
     def _generate_table_artifacts(
@@ -109,6 +127,7 @@ class SpringBootGenerator(BaseGenerator):
         package: str,
         java_src: Path,
         tables_in_service: set[str],
+        inverse_relationships: list[dict],
     ) -> None:
         class_name = table_to_class_name(table.name)
         url_path = table_to_url_path(table.name)
@@ -118,7 +137,11 @@ class SpringBootGenerator(BaseGenerator):
         pk_field_pascal = to_pascal_case(pk_col.name) if pk_col else "Id"
 
         columns_ctx = self._build_columns_ctx(table.columns, tables_in_service)
+
+        # Merge type-mapper imports + relationship imports
         extra_imports = collect_imports(table.columns)
+        for rel in inverse_relationships:
+            extra_imports = list(dict.fromkeys(extra_imports + rel.get("imports", [])))
 
         ctx = {
             "package": package,
@@ -130,6 +153,7 @@ class SpringBootGenerator(BaseGenerator):
             "pk_field_pascal": pk_field_pascal,
             "columns": columns_ctx,
             "imports": extra_imports,
+            "relationships": inverse_relationships,
         }
 
         # Load any stored hooks from the DB for this entity
@@ -154,6 +178,143 @@ class SpringBootGenerator(BaseGenerator):
         self._write(java_src / "hooks" / f"Default{class_name}Hooks.java",
                     self._render("DefaultHooks.java.j2", {**ctx, "hooks": hooks_ctx}))
 
+    # ── Relationship detection ────────────────────────────────────────────
+
+    def _is_junction_table(
+        self, table: TableModel, tables_in_service: set[str]
+    ) -> bool:
+        """
+        A table is a pure junction/pivot table when it has exactly 2 FK columns
+        both pointing to tables within the same service, and no other non-PK data
+        columns. JPA manages these via @ManyToMany @JoinTable — no entity needed.
+        """
+        fk_cols = [
+            c for c in table.columns
+            if c.is_fk and c.fk_ref_table in tables_in_service
+        ]
+        data_cols = [c for c in table.columns if not c.is_pk and not c.is_fk]
+        return len(fk_cols) == 2 and len(data_cols) == 0
+
+    def _build_service_relationships(
+        self,
+        service_tables: list[TableModel],
+        tables_in_service: set[str],
+    ) -> tuple[set[str], dict[str, list[dict]]]:
+        """
+        Pre-compute all relationship metadata for the service.
+
+        Returns:
+            junction_tables  — set of table names that are pure M2M join tables
+            inverse_rels     — {table_name: [relationship_dict, ...]}
+                               Extra fields to inject into each entity (the
+                               "other side" of @OneToMany and @ManyToMany).
+        """
+        junction_tables: set[str] = set()
+        inverse_rels: dict[str, list[dict]] = {t.name: [] for t in service_tables}
+
+        # ── Pass 1: identify junction tables ─────────────────────────────
+        for table in service_tables:
+            if self._is_junction_table(table, tables_in_service):
+                junction_tables.add(table.name)
+
+        # ── Pass 2: build inverse sides ───────────────────────────────────
+        for table in service_tables:
+            if table.name in junction_tables:
+                # ManyToMany — inject into BOTH referenced entities
+                fk_cols = [
+                    c for c in table.columns
+                    if c.is_fk and c.fk_ref_table in tables_in_service
+                ]
+                # fk_cols[0] → owning side entity
+                # fk_cols[1] → inverse side entity
+                fk_a, fk_b = fk_cols[0], fk_cols[1]
+                ref_a, ref_b = fk_a.fk_ref_table, fk_b.fk_ref_table
+                class_a = table_to_class_name(ref_a)
+                class_b = table_to_class_name(ref_b)
+
+                # Field name on A = camelCase of ref_b's table name
+                field_on_a = to_camel_case(ref_b)
+                # Field name on B = camelCase of ref_a's table name
+                field_on_b = to_camel_case(ref_a)
+
+                # Owning side (A) — carries @JoinTable
+                owning_annotations = [
+                    "@ManyToMany",
+                    "@JoinTable(",
+                    f'    name = "{table.name}",',
+                    f'    joinColumns = @JoinColumn(name = "{fk_a.name}"),',
+                    f'    inverseJoinColumns = @JoinColumn(name = "{fk_b.name}")',
+                    ")",
+                ]
+                if ref_a in inverse_rels:
+                    inverse_rels[ref_a].append({
+                        "annotation_lines": owning_annotations,
+                        "field_name": field_on_a,
+                        "java_type": f"Set<{class_b}>",
+                        "javadoc": f"Many-to-many relationship to {{@link {class_b}}} via the {{@code {table.name}}} join table.",
+                        "imports": [
+                            "jakarta.persistence.ManyToMany",
+                            "jakarta.persistence.JoinTable",
+                            "jakarta.persistence.JoinColumn",
+                            "java.util.Set",
+                        ],
+                    })
+
+                # Inverse side (B) — uses mappedBy
+                if ref_b in inverse_rels:
+                    inverse_rels[ref_b].append({
+                        "annotation_lines": [f'@ManyToMany(mappedBy = "{field_on_a}")'],
+                        "field_name": field_on_b,
+                        "java_type": f"Set<{class_a}>",
+                        "javadoc": f"Many-to-many relationship to {{@link {class_a}}} (inverse side).",
+                        "imports": [
+                            "jakarta.persistence.ManyToMany",
+                            "java.util.Set",
+                        ],
+                    })
+
+            else:
+                # Check outgoing FKs — each one generates an inverse on the parent
+                for col in table.columns:
+                    if not col.is_fk or col.fk_ref_table not in tables_in_service:
+                        continue
+                    if col.fk_ref_table not in inverse_rels:
+                        continue
+
+                    child_class = table_to_class_name(table.name)
+                    # The field name used on the child side for this FK
+                    mapped_by_field = to_camel_case(
+                        col.name[:-3] if col.name.endswith("_id") else col.name
+                    )
+
+                    if col.is_unique:
+                        # @OneToOne — FK is unique, so at most one child per parent
+                        inverse_rels[col.fk_ref_table].append({
+                            "annotation_lines": [
+                                f'@OneToOne(mappedBy = "{mapped_by_field}")',
+                            ],
+                            "field_name": to_camel_case(table.name),
+                            "java_type": child_class,
+                            "javadoc": f"One-to-one relationship to {{@link {child_class}}}.",
+                            "imports": ["jakarta.persistence.OneToOne"],
+                        })
+                    else:
+                        # @OneToMany — standard FK, multiple children per parent
+                        inverse_rels[col.fk_ref_table].append({
+                            "annotation_lines": [
+                                f'@OneToMany(mappedBy = "{mapped_by_field}")',
+                            ],
+                            "field_name": to_camel_case(table.name),
+                            "java_type": f"List<{child_class}>",
+                            "javadoc": f"One-to-many relationship to {{@link {child_class}}}.",
+                            "imports": [
+                                "jakarta.persistence.OneToMany",
+                                "java.util.List",
+                            ],
+                        })
+
+        return junction_tables, inverse_rels
+
     # ── Column context builder ────────────────────────────────────────────
 
     def _build_columns_ctx(
@@ -172,16 +333,24 @@ class SpringBootGenerator(BaseGenerator):
 
             if in_service_fk:
                 ref_class = table_to_class_name(col.fk_ref_table)
-                annotations = [
-                    "@ManyToOne",
-                    f'@JoinColumn(name = "{col.name}")',
-                ]
                 field_name = to_camel_case(
                     col.name[:-3] if col.name.endswith("_id") else col.name
                 )
+                if col.is_unique:
+                    # @OneToOne — this FK column has a UNIQUE constraint
+                    annotations = [
+                        "@OneToOne",
+                        f'@JoinColumn(name = "{col.name}")',
+                    ]
+                else:
+                    # @ManyToOne — standard FK
+                    annotations = [
+                        "@ManyToOne",
+                        f'@JoinColumn(name = "{col.name}")',
+                    ]
                 java_type = ref_class
                 extra_imports_for_col = [
-                    "jakarta.persistence.ManyToOne",
+                    "jakarta.persistence.OneToOne" if col.is_unique else "jakarta.persistence.ManyToOne",
                     "jakarta.persistence.JoinColumn",
                 ]
             else:

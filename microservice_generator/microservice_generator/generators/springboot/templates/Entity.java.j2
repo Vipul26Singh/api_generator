@@ -30,7 +30,7 @@ public class {{ class_name }} {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 {% elif col.in_service_fk %}
-    /** Many-to-one relationship to {@link {{ col.java_type }}}. */
+    /** {{ col.annotations[0] | replace('@', '') }} relationship to {@link {{ col.java_type }}}. */
 {% elif col.cross_service_fk_comment %}
     {{ col.cross_service_fk_comment }}
 {% endif %}
@@ -38,6 +38,16 @@ public class {{ class_name }} {
     {{ ann }}
 {% endfor %}
     private {{ col.java_type }} {{ col.field_name }};
+
+{% endfor %}
+{% for rel in relationships %}
+    /**
+     * {{ rel.javadoc }}
+     */
+{% for ann in rel.annotation_lines %}
+    {{ ann }}
+{% endfor %}
+    private {{ rel.java_type }} {{ rel.field_name }};
 
 {% endfor %}
 }
