@@ -152,8 +152,191 @@ services:
 Rules:
 - Each table can only appear in **one** service
 - Each service must have a unique `name` and `port`
-- Foreign keys between tables in the **same service** → `@ManyToOne @JoinColumn`
+- Foreign keys between tables in the **same service** → JPA relationship annotations (see below)
 - Foreign keys pointing to a **different service** → plain `Long` field + comment (cross-service joins are an anti-pattern)
+
+---
+
+## JPA relationship mapping
+
+The generator detects all four standard JPA relationship types automatically from your SQL DDL — no extra config required. Detection rules are driven entirely by how you define the schema.
+
+### Quick reference
+
+| SQL pattern | JPA annotation | Also generates |
+|---|---|---|
+| `FOREIGN KEY (col) REFERENCES other_table` | `@ManyToOne @JoinColumn` on child | `@OneToMany(mappedBy=)` on parent |
+| `col ... UNIQUE, FOREIGN KEY (col) REFERENCES other_table` | `@OneToOne @JoinColumn` on child | `@OneToOne(mappedBy=)` on parent |
+| *(inverse of the above two)* | *(auto-injected on parent entity)* | `List<Child>` / single ref field |
+| Pure junction table (2 FKs, no data cols) | `@ManyToMany @JoinTable` on owning side | `@ManyToMany(mappedBy=)` on inverse side; junction table entity skipped |
+| Cross-service FK | none — plain `Long` field + comment | — |
+
+---
+
+### Many-to-One
+
+The most common case. A child table has a foreign key to a parent table **in the same service**.
+
+**SQL:**
+```sql
+CREATE TABLE equipments (
+    id                    BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    equipment_category_id BIGINT UNSIGNED,
+    -- ...
+    PRIMARY KEY (id),
+    FOREIGN KEY (equipment_category_id) REFERENCES equipment_category (id)
+);
+```
+
+**Generated — `Equipment.java` (child, owning side):**
+```java
+@ManyToOne
+@JoinColumn(name = "equipment_category_id")
+private EquipmentCategory equipmentCategory;
+```
+
+**Generated — `EquipmentCategory.java` (parent, inverse side, auto-injected):**
+```java
+@OneToMany(mappedBy = "equipmentCategory")
+private List<Equipment> equipments;
+```
+
+The `_id` suffix is stripped from the column name to form the field name (`equipment_category_id` → `equipmentCategory`).
+
+---
+
+### One-to-One
+
+Triggered when the FK column also carries a `UNIQUE` constraint, meaning at most one child row can reference each parent row.
+
+**SQL:**
+```sql
+CREATE TABLE user_profiles (
+    id      BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id BIGINT UNSIGNED NOT NULL UNIQUE,   -- UNIQUE triggers @OneToOne
+    bio     TEXT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+```
+
+**Generated — `UserProfile.java` (child, owning side):**
+```java
+@OneToOne
+@JoinColumn(name = "user_id")
+private User user;
+```
+
+**Generated — `User.java` (parent, inverse side, auto-injected):**
+```java
+@OneToOne(mappedBy = "user")
+private UserProfile userProfile;
+```
+
+---
+
+### One-to-Many
+
+You never write this annotation manually. It is always **auto-generated on the parent** as the inverse side of a `@ManyToOne` or `@OneToOne` on the child. See the examples above.
+
+The field name on the parent is derived from the child table's name:
+
+| Child table | Field on parent |
+|---|---|
+| `equipment_checkin` | `equipmentCheckin` |
+| `user_profiles` | `userProfiles` |
+| `order_items` | `orderItems` |
+
+---
+
+### Many-to-Many
+
+Triggered when the generator detects a **pure junction table** — a table that has exactly **two foreign-key columns** (both pointing to tables in the same service) and **no other data columns** (an auto-increment PK is allowed).
+
+The junction table itself is **not** turned into an entity; JPA manages it entirely via `@JoinTable`.
+
+**SQL:**
+```sql
+CREATE TABLE users (
+    id       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    -- ...
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE user_groups (
+    id   BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+-- Pure junction table — no data columns besides the two FKs
+CREATE TABLE user_group_members (
+    user_id  BIGINT UNSIGNED NOT NULL,
+    group_id BIGINT UNSIGNED NOT NULL,
+    PRIMARY KEY (user_id, group_id),
+    FOREIGN KEY (user_id)  REFERENCES users (id),
+    FOREIGN KEY (group_id) REFERENCES user_groups (id)
+);
+```
+
+**Generator output:**
+```
+[INFO] 'user_group_members' is a junction table — skipping (managed via @ManyToMany @JoinTable)
+```
+
+**Generated — `User.java` (owning side — first FK in the junction table):**
+```java
+@ManyToMany
+@JoinTable(
+    name = "user_group_members",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "group_id")
+)
+private Set<UserGroup> userGroups;
+```
+
+**Generated — `UserGroup.java` (inverse side):**
+```java
+@ManyToMany(mappedBy = "userGroups")
+private Set<User> users;
+```
+
+> **Junction table with extra columns?** If your join table carries additional data (e.g. `assigned_at`, `role`), add at least one non-FK, non-PK column. The generator will treat it as a regular entity with `@ManyToOne` fields on both sides instead.
+
+---
+
+### Cross-service foreign key
+
+When a FK references a table that belongs to a **different service**, the generator intentionally does **not** create a JPA relationship — cross-service joins are a microservices anti-pattern. The column is emitted as a plain `Long` with a comment:
+
+**SQL:**
+```sql
+-- event_equipment_checkout is in event-service
+-- equipments is in inventory-service  ← different service
+FOREIGN KEY (equipment_id) REFERENCES equipments (id)
+```
+
+**Generated — `EventEquipmentCheckout.java`:**
+```java
+// Cross-service reference → equipments
+private Long equipmentId;
+```
+
+Fetch the related resource via its REST API at runtime.
+
+---
+
+### All four types at a glance
+
+```
+equipment_category  ◄──(OneToMany)──  equipments  ◄──(OneToMany)──  equipment_checkin
+       (parent)        (ManyToOne)►     (parent)     (ManyToOne)►        (child)
+
+users  ◄──(ManyToMany via user_group_members)──►  user_groups
+
+user_profiles  ──(OneToOne)──►  users
+  (child, owns FK)               (parent, mappedBy)
+```
 
 ---
 
